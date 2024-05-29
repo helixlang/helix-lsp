@@ -5,4 +5,4 @@ out/
 *.ast 
 *.nrs
 dist/
-*.vsix
+.DS_Store
