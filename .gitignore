@@ -1,8 +1,22 @@
-/target
-node_modules
-out/
-.pnpm-debug.log
-*.ast 
-*.nrs
-dist/
+# Xmake cache
+.xmake/
+build/
+
+# MacOS Cache
 .DS_Store
+
+#python virtualenv
+venv/
+.venv/
+
+# Clanged Cache
+.clangd/
+.cache/
+target/
+vsxmake2022/
+
+compile_commands.json
+index.html
+
+# Temp folder
+temp/
