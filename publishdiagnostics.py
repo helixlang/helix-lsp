@@ -6,7 +6,7 @@ import json
 import subprocess
 import logging
 from pygls.lsp.server import LanguageServer
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlparse
 
 
 class PublishDiagnosticServer(LanguageServer):
@@ -20,11 +20,22 @@ class PublishDiagnosticServer(LanguageServer):
     def parse(self, document: types.TextDocumentItem):
         diagnostics = []
         uri_path = urlparse(document.uri).path
-        file_path = os.path.abspath(uri_path)
+        decoded_path = unquote(uri_path)  # Decode the URI (removes %3A and similar)
+        file_path = os.path.abspath(decoded_path.lstrip('/'))  # Remove leading slash
+        
         try:
             logging.debug(f"Parsing document: {document.uri}")
+            helix_path = json.loads(open("config.json", "r").read())["helix_path"]
+            if not helix_path:
+                raise Exception("Helix path not set in config.json")
+            if not os.path.exists(helix_path):
+                raise Exception("Helix path does not exist")
+            command = [helix_path, file_path, "--lsp-mode"]
+            logging.debug(f"Running command: {command}")
+            
             process: subprocess.Popen = subprocess.Popen(
-                ["C:/Projects/my-shit/helix/helix-lang/build/release/x64-msvc-windows/bin/helix.exe", file_path, "--lsp-mode"], stdout=subprocess.PIPE
+                command, 
+                stdout=subprocess.PIPE
             )
             result: str = process.communicate()[0].decode("utf-8")
             exit_code: int = process.returncode
@@ -32,9 +43,10 @@ class PublishDiagnosticServer(LanguageServer):
 
             if exit_code:
                 if result:
-                    json_result = json.loads(result)
+                    json_result = json.loads(result.strip())
                     logging.debug(f"Parsed JSON result: {json_result}")
-                    if json_result["error_type"] == "code":
+                    
+                    if "error_type" in json_result and json_result["error_type"] == "code":
                         diagnostics.append(
                             types.Diagnostic(
                                 message=json_result["msg"],
@@ -46,26 +58,35 @@ class PublishDiagnosticServer(LanguageServer):
                                 }[str(json_result["level"]).strip()],
                                 range=types.Range(
                                     start=types.Position(
-                                        line=json_result["line"],
+                                        line=int(json_result["line"])-1,
                                         character=json_result["col"]
                                     ),
                                     end=types.Position(
-                                        line=json_result["line"],
+                                        line=int(json_result["line"])-1,
                                         character=(json_result["col"] + json_result["offset"])
                                     )
                                 ),
                             )
                         )
+
+            # Update the diagnostics dictionary with new diagnostics
             self.diagnostics[document.uri] = (document.version, diagnostics)
+
         except Exception as e:
             logging.error(f"Error parsing document: {e}")
             raise e
+
                     
 HelixLanguageServer = PublishDiagnosticServer("diag", "v0.1")
 
 @HelixLanguageServer.feature(types.TEXT_DOCUMENT_DID_OPEN)
 def did_open(ls: PublishDiagnosticServer, params: types.DidOpenTextDocumentParams):
     doc = ls.workspace.get_text_document(params.text_document.uri)
+    
+    # Parse the document and update diagnostics
+    ls.parse(doc)
+    
+    # Send diagnostics to the client
     for uri, (version, diagnostics) in ls.diagnostics.items():
         ls.text_document_publish_diagnostics(
             types.PublishDiagnosticsParams(
@@ -79,7 +100,26 @@ def did_open(ls: PublishDiagnosticServer, params: types.DidOpenTextDocumentParam
 @HelixLanguageServer.feature(types.TEXT_DOCUMENT_DID_CHANGE)
 def did_change(ls: PublishDiagnosticServer, params: types.DidChangeTextDocumentParams):
     doc = ls.workspace.get_text_document(params.text_document.uri)
-    for uri, (version, diagnostics) in ls.diagnostics.items():
+    
+    # First pass: parse the document for diagnostics
+    ls.parse(doc)  # Trigger initial parsing
+
+    # Send diagnostics after the first parse
+    send_diagnostics(ls, doc.uri)
+
+    # Second pass: rerun the diagnostics with a delay
+    def delayed_parse():
+        time.sleep(0.5)  # Delay by 500 milliseconds
+        ls.parse(doc)  # Re-run the parsing
+        send_diagnostics(ls, doc.uri)  # Send diagnostics again after the second parse
+
+    threading.Thread(target=delayed_parse).start()
+
+
+def send_diagnostics(ls, uri):
+    """Helper function to send diagnostics for a document."""
+    if uri in ls.diagnostics:
+        version, diagnostics = ls.diagnostics[uri]
         ls.text_document_publish_diagnostics(
             types.PublishDiagnosticsParams(
                 uri=uri,
@@ -88,7 +128,7 @@ def did_change(ls: PublishDiagnosticServer, params: types.DidChangeTextDocumentP
             )
         )
 
-def save_port_info(server_ptr: list[HelixLanguageServer]):
+def save_port_info(server_ptr: list[HelixLanguageServer]): # type: ignore
     time.sleep(1)  # Wait for server to start
     
     actual_port = server_ptr[0]._server.sockets[0].getsockname()[1]
