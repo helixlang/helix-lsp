@@ -9,12 +9,24 @@ from pygls.lsp.server import LanguageServer
 from urllib.parse import unquote, urlparse
 
 
-class PublishDiagnosticServer(LanguageServer):
+def async_print(level, message):
+    # 1: Error, 2: Warning, 3: Info, 4: Debug
+    if level == 1:
+        logging.error(message)
+    elif level == 2:
+        logging.warning(message)
+    elif level == 3:
+        logging.info(message)
+    elif level == 4:
+        logging.debug(message)
+    else:
+        logging.info(message)
 
+class PublishDiagnosticServer(LanguageServer):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(message)s')
-        logging.debug("Server initialized")
+        async_print(4, "Server initialized")
         self.diagnostics = {}
 
     def parse(self, document: types.TextDocumentItem):
@@ -24,14 +36,14 @@ class PublishDiagnosticServer(LanguageServer):
         file_path = os.path.abspath(decoded_path.lstrip('/'))  # Remove leading slash
         
         try:
-            logging.debug(f"Parsing document: {document.uri}")
+            async_print(4, f"Parsing document: {document.uri}")
             helix_path = json.loads(open("config.json", "r").read())["helix_path"]
             if not helix_path:
                 raise Exception("Helix path not set in config.json")
             if not os.path.exists(helix_path):
                 raise Exception("Helix path does not exist")
             command = [helix_path, file_path, "--lsp-mode"]
-            logging.debug(f"Running command: {command}")
+            async_print(4, f"Running command: {command}")
             
             process: subprocess.Popen = subprocess.Popen(
                 command, 
@@ -39,12 +51,12 @@ class PublishDiagnosticServer(LanguageServer):
             )
             result: str = process.communicate()[0].decode("utf-8")
             exit_code: int = process.returncode
-            logging.debug(f"Result from helix: {result}, Exit code: {exit_code}")
+            async_print(4, f"Result from helix: {result}, Exit code: {exit_code}")
 
             if exit_code:
                 if result:
                     json_result = json.loads(result.strip())
-                    logging.debug(f"Parsed JSON result: {json_result}")
+                    async_print(4, f"Parsed JSON result: {json_result}")
                     
                     if "error_type" in json_result and json_result["error_type"] == "code":
                         diagnostics.append(
