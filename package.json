@@ -46,6 +46,23 @@
                 "scopeName": "source.Helix",
                 "path": "./public/syntaxes/Helix.tmLanguage.json"
             }
+        ],
+        "configuration": {
+            "type": "object",
+            "title": "Helix Language Support",
+            "properties": {
+                "helix.compilerPath": {
+                    "type": "string",
+                    "default": "helix",
+                    "description": "The (absolute) path to the Helix compiler executable"
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "helix.restartLanguageServer",
+                "title": "helix: Restart Language Server"
+            }
         ]
     },
     "scripts": {
