@@ -46,12 +46,12 @@ class PublishDiagnosticServer(LanguageServer):
             async_print(4, f"Running command: {command}")
             
             process: subprocess.Popen = subprocess.Popen(
-                command, 
+                command,
                 stdout=subprocess.PIPE
             )
             result: str = process.communicate()[0].decode("utf-8")
             exit_code: int = process.returncode
-            async_print(4, f"Result from helix: {result}, Exit code: {exit_code}")
+            async_print(4, f"Result from Helix: {result}, Exit code: {exit_code}")
 
             if exit_code:
                 if result:
