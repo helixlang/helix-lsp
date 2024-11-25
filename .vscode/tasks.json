@@ -9,6 +9,15 @@
                 "kind": "build",
                 "isDefault": true
             },
+            "hide": true,
+            "presentation": {
+                "echo": true,
+                "reveal": "silent", // only show the output of the task if an error occurs
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": true
+            },
             "problemMatcher": []
         }
     ]
