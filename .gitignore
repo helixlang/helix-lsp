@@ -20,3 +20,35 @@ index.html
 
 # Temp folder
 temp/
+
+# Ignore build output
+/build
+
+# Ignore dependencies
+/node_modules
+
+# Ignore temporary files
+*.tmp
+
+# Ignore user-specific settings
+.vscode/settings.json
+
+# Ignore editor-specific files
+.vscode/*.code-workspace
+
+# Ignore logs
+*.log
+
+# Ignore package lock files
+package-lock.json
+yarn.lock
+
+# Ignore IDE-specific files
+.idea
+*.iml
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore Windows specific files
+Thumbs.db

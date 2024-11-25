@@ -1,0 +1,693 @@
+{
+    "version": "0.2.2",
+    "scopeName": "source.Helix",
+    "name": "Helix",
+    "patterns": [
+        {
+            "include": "#block-comments"
+        },
+        {
+            "include": "#comments"
+        },
+        {
+            "include": "#attributes"
+        },
+        {
+            "include": "#class_reference"
+        },
+        {
+            "include": "#constants"
+        },
+        {
+            "include": "#functions"
+        },
+        {
+            "include": "#types"
+        },
+        {
+            "include": "#keywords"
+        },
+        {
+            "include": "#define"
+        },
+        {
+            "include": "#namespaces"
+        },
+        {
+            "include": "#punctuation"
+        },
+        {
+            "include": "#strings"
+        },
+        {
+            "include": "#variables"
+        },
+        {
+            "include": "#generics"
+        }
+    ],
+    "repository": {
+        "expressions": {
+            "patterns": [
+                {
+                    "include": "#class_reference"
+                },
+                {
+                    "include": "#constants"
+                },
+                {
+                    "include": "#functions"
+                },
+                {
+                    "include": "#types"
+                },
+                {
+                    "include": "#keywords"
+                },
+                {
+                    "include": "#define"
+                },
+                {
+                    "include": "#namespaces"
+                },
+                {
+                    "include": "#punctuation"
+                },
+                {
+                    "include": "#strings"
+                },
+                {
+                    "include": "#variables"
+                },
+                {
+                    "include": "#generics"
+                }
+            ]
+        },
+        "comments": {
+            "patterns": [
+                {
+                    "name": "comment.line.Helix",
+                    "match": "//.*$"
+                }
+            ]
+        },
+        "block-comments": {
+            "patterns": [
+                {
+                    "comment": "block comments",
+                    "name": "comment.block.Helix",
+                    "begin": "/\\*",
+                    "end": "\\*/"
+                }
+            ]
+        },
+        "constants": {
+            "patterns": [
+                {
+                    "name": "constant.numeric.decimal.Helix",
+                    "match": "\\b\\d[\\d_]*(\\.?)[\\d_]*(?:(E|e)([+-]?)([\\d_]+))?\\b"
+                },
+                {
+                    "name": "constant.numeric.hex.Helix",
+                    "match": "\\b0x[\\da-fA-F_]+\\b"
+                },
+                {
+                    "name": "constant.numeric.oct.Helix",
+                    "match": "\\b0o[0-7_]+\\b"
+                },
+                {
+                    "name": "constant.numeric.bin.Helix",
+                    "match": "\\b0b[01_]+\\b"
+                },
+                {
+                    "name": "constant.language.bool.Helix",
+                    "match": "\\b(true|false|null|nullptr)\\b"
+                }
+            ]
+        },
+        "escapes": {
+            "comment": "escapes: ASCII, byte, Unicode, quote, regex",
+            "name": "constant.character.escape.Helix",
+            "match": "(\\\\)(?:(?:(x[0-7][\\da-fA-F])|(u(\\{)[\\da-fA-F]{4,6}(\\}))|.))",
+            "captures": {
+                "1": {
+                    "name": "constant.character.escape.backslash.Helix"
+                },
+                "2": {
+                    "name": "constant.character.escape.bit.Helix"
+                },
+                "3": {
+                    "name": "constant.character.escape.unicode.Helix"
+                },
+                "4": {
+                    "name": "constant.character.escape.unicode.punctuation.Helix"
+                },
+                "5": {
+                    "name": "constant.character.escape.unicode.punctuation.Helix"
+                }
+            }
+        },
+        "functions": {
+            "patterns": [
+                {
+                    "comment": "function definition",
+                    "name": "meta.function.definition.Helix",
+                    "begin": "\\b(fn)\\s+(((?!self|super))?[A-Za-z0-9_]+)((\\()|(<))",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.other.fn.Helix"
+                        },
+                        "2": {
+                            "name": "entity.name.function.Helix"
+                        },
+                        "4": {
+                            "name": "punctuation.brackets.round.Helix"
+                        },
+                        "5": {
+                            "name": "punctuation.brackets.angle.Helix"
+                        }
+                    },
+                    "end": "\\{|;",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.brackets.curly.Helix"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#block-comments"
+                        },
+                        {
+                            "include": "#comments"
+                        },
+                        {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#class_reference"
+                        },
+                        {
+                            "include": "#constants"
+                        },
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#define"
+                        },
+                        {
+                            "include": "#namespaces"
+                        },
+                        {
+                            "include": "#punctuation"
+                        },
+                        {
+                            "include": "#strings"
+                        },
+                        {
+                            "include": "#types"
+                        },
+                        {
+                            "include": "#variables"
+                        }
+                    ]
+                },
+                {
+                    "comment": "function/method calls, chaining, and generic function calls, including generics before the parenthesis",
+                    "name": "meta.function.call.Helix",
+                    "begin": "(((?!self|super))?[A-Za-z0-9_]+)((<([A-Za-z0-9_]+(::[A-Za-z0-9_]+)*(,\\s*[A-Za-z0-9_]+(::[A-Za-z0-9_]+)*)*)>)?)(\\()",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "entity.name.function.Helix"
+                        },
+                        "4": {
+                            "name": "storage.type.generic.Helix"
+                        },
+                        "5": {
+                            "name": "entity.name.type.Helix"
+                        },
+                        "9": {
+                            "name": "punctuation.brackets.round.Helix"
+                        }
+                    },
+                    "end": "\\)",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.brackets.round.Helix"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#block-comments"
+                        },
+                        {
+                            "include": "#comments"
+                        },
+                        {
+                            "include": "#attributes"
+                        },
+                        {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#class_reference"
+                        },
+                        {
+                            "include": "#constants"
+                        },
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#define"
+                        },
+                        {
+                            "include": "#namespaces"
+                        },
+                        {
+                            "include": "#punctuation"
+                        },
+                        {
+                            "include": "#strings"
+                        },
+                        {
+                            "include": "#types"
+                        },
+                        {
+                            "include": "#variables"
+                        },
+                        {
+                            "include": "#generics"
+                        }
+                    ]
+                }
+            ]
+        },
+        "keywords": {
+            "patterns": [
+                {
+                    "comment": "Control flow keywords",
+                    "name": "keyword.control.Helix",
+                    "match": "\\b(break|case|continue|default|else|for|if|match|switch|unless|in|while)\\b"
+                },
+                {
+                    "comment": "Function and method keywords",
+                    "name": "keyword.function.Helix",
+                    "match": "\\b(async|fn|inline|macro|op|return|yield)\\b"
+                },
+                {
+                    "comment": "Class and struct keywords",
+                    "name": "keyword.class.Helix",
+                    "match": "\\b(class|enum|struct|type|extend)\\b"
+                },
+                {
+                    "comment": "Inheritance and polymorphism keywords",
+                    "name": "keyword.inheritance.Helix",
+                    "match": "\\b(extend|derives|interface|requires|with|has)\\b"
+                },
+                {
+                    "comment": "Error handling keywords",
+                    "name": "keyword.error.Helix",
+                    "match": "\\b(catch|finally|panic|try|test|assert)\\b"
+                },
+                {
+                    "comment": "Variable declaration keywords",
+                    "name": "keyword.declaration.Helix",
+                    "match": "\\b(eval|let|static|const)\\b"
+                },
+                {
+                    "comment": "Access specifiers",
+                    "name": "keyword.access.Helix",
+                    "match": "\\b(module|priv|pub|prot)\\b"
+                },
+                {
+                    "comment": "Module importing keywords",
+                    "name": "keyword.import.Helix",
+                    "match": "\\b(as|ffi|import)\\b"
+                },
+                {
+                    "comment": "Concurrency keywords",
+                    "name": "keyword.concurrency.Helix",
+                    "match": "\\b(atomic|await|spawn|thread)\\b"
+                },
+                {
+                    "comment": "Other keywords",
+                    "name": "keyword.other.Helix",
+                    "match": "\\b(delete|unsafe)\\b"
+                },
+                {
+                    "comment": "Primitive Type keywords",
+                    "name": "keyword.primitive.Helix",
+                    "match": "\\b(f32|f64|i128|i16|i32|i64|i8|isize|u128|u16|u32|u64|u8|usize|char|bool|void)\\b"
+                },
+                {
+                    "comment": "Operators",
+                    "name": "keyword.operator.Helix",
+                    "match": "\\b(\\+|\\+\\+|\\+=|\\+-|\\-|\\-\\-|\\-=|\\*|\\*=|\\/|\\/=|%|%=|&|&=|&&|&&=|@|@=|\\^|\\^=|^^|^^=|~|~&|~&=|~\\||~\\|=|\\||\\|=|\\|\\||\\|\\|=|!|!=|!&|!&=|!\\||!\\|=|<<|<<=|>>|>>=|==|===|>|>=|<|<=|\\.\\.|\\.\\.=|::|->|=|\\*\\*|\\*\\*=)\\b"
+                }
+            ]
+        },
+        "types": {
+            "patterns": [
+                {
+                    "comment": "numeric types",
+                    "match": "\\b(int|float|decimal)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.type.numeric.Helix"
+                        }
+                    }
+                },
+                {
+                    "comment": "complex types",
+                    "match": "\\b(string|list|map|set|tuple)\\b",
+                    "name": "entity.name.type.complex.Helix"
+                },
+                {
+                    "comment": "user-defined types, possibly with generics",
+                    "match": "\\b(class|struct|enum|union|type)\\s+([A-Z][A-Za-z0-9_]*)\\b",
+                    "captures": {
+                        "1": {
+                            "name": "keyword.declaration.type.Helix"
+                        },
+                        "2": {
+                            "name": "entity.name.type.user-defined.Helix"
+                        }
+                    }
+                },
+                {
+                    "comment": "type parameters",
+                    "match": "\\b([A-Z][A-Za-z0-9_]*)\\b",
+                    "name": "entity.name.type.parameter.Helix"
+                }
+            ]
+        },
+        "generics": {
+            "patterns": [
+                {
+                    "comment": "generic type parameters",
+                    "name": "storage.type.generic.Helix",
+                    "begin": "<",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.generic.begin.Helix"
+                        }
+                    },
+                    "end": ">",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.generic.end.Helix"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#namespaces"
+                        },
+                        {
+                            "include": "#punctuation"
+                        }
+                    ]
+                }
+            ]
+        },
+        "loops": {
+            "patterns": [
+                {
+                    "comment": "Standard for loop",
+                    "name": "meta.loop.for.Helix",
+                    "begin": "\\b(for)\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s*;",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.loop.for.Helix"
+                        },
+                        "2": {
+                            "name": "storage.type.variable.Helix"
+                        }
+                    },
+                    "end": "\\{",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.parenthesis.Helix"
+                        }
+                    },
+                    "patterns": []
+                }
+            ]
+        },
+        "define": {
+            "patterns": [
+                {
+                    "comment": "Define invocation with optional parameters",
+                    "name": "meta.define.invocation.Helix",
+                    "match": "\\s?([a-z_][A-Za-z0-9_]+!)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.function.define.Helix"
+                        }
+                    }
+                },
+                {
+                    "comment": "Define macro with optional parameter list and complex body",
+                    "name": "meta.define.macro.Helix",
+                    "begin": "\\b(macro)\\s+([a-z0-9_]+[A-Za-z0-9_]*!)(\\s*\\()?",
+                    "end": "\\)\\s*->\\s*([a-z0-9_]+)\\s*\\{",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.define.Helix"
+                        },
+                        "2": {
+                            "name": "entity.name.function.define.Helix"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.parameters.begin.Helix"
+                        }
+                    },
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.parameters.end.Helix"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.body.begin.Helix"
+                        }
+                    }
+                },
+                {
+                    "comment": "Proc macro",
+                    "name": "meta.procedure.macro.Helix",
+                    "begin": "\\b(macro)\\s+([a-z0-9_]+[A-Za-z0-9_]*)(\\()",
+                    "end": "\\)\\s*->\\s*([a-z0-9_]+)\\s*\\{",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.control.macro.Helix"
+                        },
+                        "2": {
+                            "name": "entity.name.function.macro.Helix"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.parameters.begin.Helix"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.parameters.end.Helix"
+                        },
+                        "1": {
+                            "name": "entity.name.type.return.Helix"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.body.begin.Helix"
+                        }
+                    }
+                }
+            ]
+        },
+        "namespaces": {
+            "patterns": [
+                {
+                    "comment": "namespace (non-type, non-function path segment)",
+                    "name": "entity.other.namespace.Helix",
+                    "match": "(?<![A-Za-z0-9_])([A-Za-z0-9_]+)(::)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.namespace.Helix"
+                        },
+                        "2": {
+                            "name": "keyword.operator.namespace.Helix"
+                        }
+                    }
+                }
+            ]
+        },
+        "punctuation": {
+            "patterns": [
+                {
+                    "name": "punctuation.comma.Helix",
+                    "match": ","
+                },
+                {
+                    "name": "punctuation.brackets.curly.Helix",
+                    "match": "[{}]"
+                },
+                {
+                    "name": "punctuation.brackets.round.Helix",
+                    "match": "[()]"
+                },
+                {
+                    "name": "punctuation.semi.Helix",
+                    "match": ";"
+                },
+                {
+                    "name": "punctuation.brackets.square.Helix",
+                    "match": "[\\[\\]]"
+                },
+                {
+                    "name": "punctuation.brackets.angle.Helix",
+                    "match": "(?<!=)[<>]"
+                }
+            ]
+        },
+        "fstring-formatting-braces": {
+            "patterns": [
+                {
+                    "comment": "f-string formatting braces",
+                    "name": "punctuation.section.embedded.Helix",
+                    "begin": "\\{",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "punctuation.section.embedded.begin.Helix"
+                        }
+                    },
+                    "end": "\\}",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.section.embedded.end.Helix"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#expressions"
+                        }
+                    ]
+                }
+            ]
+		},
+        "f-strings": {
+            "patterns": [
+                {
+                    "name": "string.quoted.double.Helix",
+                    "begin": "(\\b[fF])([bBuU])?((['\"]))",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.other.f-string.Helix"
+                        },
+                        "2": {
+                            "name": "keyword.other.f-string.Helix"
+                        },
+                        "3": {
+                            "name": "punctuation.definition.string.Helix"
+                        }
+                    },
+                    "end": "(\\3)",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.string.Helix"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#fstring-formatting-braces"
+                        },
+                        {
+                            "include": "#escapes"
+                        },
+                        {
+                            "include": "#interpolations"
+                        }
+                    ]
+                }
+                
+            ]
+        },
+        "strings": {
+            "patterns": [
+                {
+                    "include": "#f-strings"
+                },
+                {
+                    "comment": "double-quoted strings and byte strings",
+                    "name": "string.quoted.double.Helix",
+                    "begin": "(\")",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "string.quoted.byte.raw.Helix"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.string.Helix"
+                        }
+                    },
+                    "end": "\"",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.string.Helix"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#escapes"
+                        },
+                        {
+                            "include": "#interpolations"
+                        }
+                    ]
+                },
+                {
+                    "comment": "characters and bytes",
+                    "name": "string.quoted.single.char.Helix",
+                    "begin": "(')",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "string.quoted.byte.raw.Helix"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.char.Helix"
+                        }
+                    },
+                    "end": "'",
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.char.Helix"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#escapes"
+                        }
+                    ]
+                }
+            ]
+        },
+        "class_reference": {
+            "patterns": [
+                {
+                    "comment": "self",
+                    "name": "variable.language.self.Helix",
+                    "match": "\\bself\\b"
+                },
+                {
+                    "comment": "super",
+                    "name": "variable.language.super.Helix",
+                    "match": "\\bsuper\\b"
+                }
+            ]
+        },
+        "variables": {
+            "patterns": [
+                {
+                    "name": "variable.other.Helix",
+                    "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+                }
+            ]
+        }
+    }
+}
