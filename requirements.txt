@@ -1,0 +1,4 @@
+attrs==24.2.0
+cattrs==24.1.2
+lsprotocol==2024.0.0b1
+pygls==2.0.0a2
