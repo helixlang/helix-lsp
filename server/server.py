@@ -127,13 +127,19 @@ class HelixLanguageServer(LanguageServer):
             if stderr:
                 logger.error('Helix stderr: {}', stderr.decode('utf-8'))
 
+            if process.returncode == 0:
+                logger.info('Compile successful for {}', file_path)
+                self.diagnostics[document.uri] = (document.version, [])
+                return True
+
             result = stdout.decode('utf-8').strip()
             result = self._remove_ansi_colors(result)
 
-            if not result or process.returncode != 0:
-                logger.warning(
-                    'Empty or invalid result from Helix for {}', file_path)
-                self.diagnostics[document.uri] = []
+            
+            if not result and process.returncode != 0:
+                logger.warning('Empty or invalid result from Helix for {}', file_path)
+                self.diagnostics[document.uri] = (document.version, diagnostics)
+                return False
 
             json_result = json.loads(result)
             diagnostics = self._convert_to_diagnostics(json_result)
