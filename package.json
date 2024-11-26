@@ -1,14 +1,14 @@
 {
-    "name": "Helix-language",
+    "name": "helix-language",
     "displayName": "Helix Language",
     "description": "Syntax highlighting and full language support for Helix",
     "readme": "./README.md",
-    "icon": "./public/icons/Helix-v3.ico",
+    "icon": "./public/icons/helix-v3.ico",
     "repository": {
         "type": "git",
-        "url": "https://github.com/kneorain/Helix-highlighter"
+        "url": "https://github.com/kneorain/helix-highlighter"
     },
-    "version": "0.1.4-alpha-1218",
+    "version": "0.1.8-prerelease-1",
     "publisher": "Helix Programming Language",
     "engines": {
         "vscode": "^1.94.0"
@@ -34,8 +34,8 @@
                     ".hdlx"
                 ],
                 "icon": {
-                    "light": "./public/icons/file-Helix-v3.svg",
-                    "dark": "./public/icons/file-Helix-v3.svg"
+                    "light": "./public/icons/file-helix-v3.svg",
+                    "dark": "./public/icons/file-helix-v3.svg"
                 },
                 "configuration": "./public/language-configuration.json"
             }
@@ -79,7 +79,6 @@
         "typescript": "^5.3.0"
     },
     "dependencies": {
-        "vscode": "^1.1.37",
         "vscode-languageclient": "^8.1.0",
         "vscode-languageserver": "^9.0.1",
         "vscode-languageserver-protocol": "^3.17.5"
