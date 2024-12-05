@@ -226,6 +226,13 @@ def did_save(server: HelixLanguageServer, params: DidChangeTextDocumentParams) -
     server.queue_parse(doc)
     send_diagnostics(server, params.text_document.uri)
 
+# @SERVER.feature("workspace/didChangeWatchedFiles")
+# def did_change_watched_files(server: HelixLanguageServer, params: DidChangeTextDocumentParams) -> None:
+#     """Handles watched file changes."""
+#     logger.info('Watched files changed: {}', params.text_document.uri)
+#     doc = server.workspace.get_text_document(params.text_document.uri)
+#     server.queue_parse(doc)
+#     send_diagnostics(server, params.text_document.uri)
 
 def send_diagnostics(server: HelixLanguageServer, uri: str) -> None:
     """Sends diagnostics to the client."""

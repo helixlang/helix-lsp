@@ -4,16 +4,18 @@
 
 ### Table of Contents
 
-- [Introduction](#introduction)
-- [Our Standards](#our-standards)
-- [Enforcement](#enforcement)
-  - [Enforcement Actions](#enforcement-actions)
-- [Reporting Issues](#reporting-issues)
-  - [What to Include in a Report](#what-to-include-in-a-report)
-  - [What Happens After Reporting](#what-happens-after-reporting)
-  - [Appeals](#appeals)
-  - [Special Cases](#special-cases)
-- [Acknowledgements](#acknowledgements)
+- [Helix Programming Language Code of Conduct](#helix-programming-language-code-of-conduct)
+  - [Table of Contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Our Standards](#our-standards)
+  - [Enforcement](#enforcement)
+    - [Enforcement Actions](#enforcement-actions)
+  - [Reporting Issues](#reporting-issues)
+    - [What to Include in a Report](#what-to-include-in-a-report)
+    - [What Happens After Reporting](#what-happens-after-reporting)
+    - [Appeals](#appeals)
+    - [Special Cases](#special-cases)
+  - [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -61,7 +63,7 @@ Community members are expected to adhere to these standards. Unacceptable behavi
 
 ### Reporting Issues
 
-If you encounter or witness behavior that violates this Code of Conduct, please report it to the Helix Conduct Team at [conduct@neorain.co](mailto:conduct@neorain.co). Your report will be handled confidentially. 
+If you encounter or witness behavior that violates this Code of Conduct, please report it to the Helix Conduct Team at [conduct@helix-lang.com](mailto:conduct@helix-lang.com). Your report will be handled confidentially. 
 
 #### What to Include in a Report
 

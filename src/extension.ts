@@ -12,6 +12,11 @@ let client: LanguageClient|undefined;
 export async function activate(context: vscode.ExtensionContext):
     Promise<void> {
   try {
+    context.subscriptions.push(vscode.commands.registerCommand(
+        'helix.restartLanguageServer', async () => {
+          await restartLanguageServer(context, helixPath);
+        }));
+
     const helixPath =
         await getOrPromptHelixCompilerPath();  // points to helix/bin/helix
     if (!helixPath) {
@@ -38,11 +43,6 @@ export async function activate(context: vscode.ExtensionContext):
     client.start();
 
     context.subscriptions.push(client);
-    context.subscriptions.push(vscode.commands.registerCommand(
-        'helix.restartLanguageServer', async () => {
-          await restartLanguageServer(context, helixPath);
-        }));
-
   } catch (error) {
     vscode.window.showErrorMessage(
         `Failed to activate Helix Language Server Client: ${error}`);
@@ -142,6 +142,9 @@ async function createVirtualEnv(
   }
 
   // create the virtual environment
+
+  vscode.window.showInformationMessage('Creating virtual environment...');
+
   try {
     await vscode.workspace.fs.createDirectory(vscode.Uri.file(venvDir));
   } catch (error) {
@@ -191,12 +194,15 @@ async function createVirtualEnv(
     var venvPath =
         process.platform === 'win32' ? venvPythonPathWin : venvPythonPathUnix;
 
+    vscode.window.showInformationMessage(
+        `Virtual environment created: ${venvPath}`);
     const requirementsPath = path.resolve(__dirname, '..', 'requirements.txt');
     await installRequirements(venvPath, requirementsPath);
 
     // wait for the requirements to be installed
     await new Promise((resolve) => setTimeout(resolve, 5000));
 
+    vscode.window.showInformationMessage('Installed requirements successfully');
     return venvPath;
   } catch (error) {
     console.error(`[ERROR] Virtual environment creation failed: ${error}`);
@@ -315,16 +321,30 @@ async function getOrPromptHelixCompilerPath(): Promise<string> {
         `Helix compiler path does not exist or is not executable: ${
             helixPath}`);
 
-    helixPath = await vscode.window.showInputBox({
-      prompt: 'Enter the full path to the Helix compiler (helix binary)',
-      placeHolder: '/path/to/helix',
-    });
+    while (!helixPathValid) {
+      helixPath = await vscode.window.showInputBox({
+        prompt: 'Enter the full path to the Helix compiler (helix binary)',
+        placeHolder: '/path/to/helix',
+      });
 
-    if (helixPath) {
-      await config.update(
-          'compilerPath', helixPath, vscode.ConfigurationTarget.Global);
-      vscode.window.showInformationMessage(
-          `Helix compiler path set to: ${helixPath}`);
+      if (helixPath) {
+        try {
+          await vscode.workspace.fs.stat(vscode.Uri.file(helixPath));
+          helixPathValid = true;
+        } catch (error) {
+          console.error(`[ERROR] Helix compiler path error: ${error}`);
+          helixPath = '';
+        }
+
+        await config.update(
+            'compilerPath', helixPath, vscode.ConfigurationTarget.Global);
+
+        vscode.window.showInformationMessage(
+            `Helix compiler path set to: ${helixPath}`);
+      }
+
+      // sleep for 4 seconds
+      await new Promise((resolve) => setTimeout(resolve, 4000));
     }
   }
 
@@ -339,8 +359,7 @@ function createServerOptions(helixPath: string, venvPath: string): () =>
     Promise<StreamInfo> {
   return (): Promise<StreamInfo> => {
     return new Promise((resolve, reject) => {
-      const SERVER_SCRIPT_PATH =
-          path.resolve(__dirname, '..', 'server', 'server.py');
+      const SERVER_SCRIPT_PATH = path.resolve(__dirname, '..', 'server', 'server.py');
 
       console.log(`[INFO] Server script path: ${SERVER_SCRIPT_PATH}`);
       console.log(`[INFO] Helix binary path: ${helixPath}`);

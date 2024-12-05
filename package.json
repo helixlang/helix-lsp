@@ -1,37 +1,42 @@
 {
     "name": "helix-language",
-    "displayName": "Helix Language",
+    "displayName": "Helix Language Support",
     "description": "Syntax highlighting and full language support for Helix",
     "readme": "./README.md",
     "icon": "./public/icons/helix-v3.ico",
     "repository": {
         "type": "git",
-        "url": "https://github.com/kneorain/helix-highlighter"
+        "url": "https://github.com/helixlang/helix-lsp"
     },
     "version": "0.1.8-prerelease-1",
-    "publisher": "Helix Programming Language",
+    "publisher": "helix-programing-language",
     "engines": {
         "vscode": "^1.94.0"
     },
     "categories": [
         "Programming Languages"
     ],
-    "activationEvents": [],
+    "activationEvents": [
+        "onLanguage:helix",
+        "onCommand:helix.restartLanguageServer"
+    ],
     "main": "./dist/extension.js",
     "contributes": {
         "languages": [
             {
-                "id": "Helix",
+                "id": "helix",
                 "aliases": [
+                    "helix",
                     "Helix",
-                    "hlx",
-                    "Helix"
+                    "hlx"
                 ],
                 "extensions": [
                     ".hlx",
-                    ".Helix",
+                    ".helix",
+                    
                     ".hdx",
-                    ".hdlx"
+                    ".hdlx",
+                    ".helixh"
                 ],
                 "icon": {
                     "light": "./public/icons/file-helix-v3.svg",
@@ -42,9 +47,9 @@
         ],
         "grammars": [
             {
-                "language": "Helix",
-                "scopeName": "source.Helix",
-                "path": "./public/syntaxes/Helix.tmLanguage.json"
+                "language": "helix",
+                "scopeName": "source.helix",
+                "path": "./public/syntaxes/helix.tmLanguage.json"
             }
         ],
         "configuration": {
@@ -84,3 +89,5 @@
         "vscode-languageserver-protocol": "^3.17.5"
     }
 }
+
+
