@@ -2,14 +2,14 @@
     "name": "helix-language",
     "displayName": "Helix Language Support",
     "description": "Syntax highlighting and full language support for Helix",
-    "readme": "./README.md",
-    "icon": "./public/icons/helix-v3.ico",
+    "readme": "README.md",
+    "icon": "public/icons/helix-v3.ico",
     "repository": {
         "type": "git",
         "url": "https://github.com/helixlang/helix-lsp"
     },
-    "version": "0.1.8-prerelease-1",
-    "publisher": "helix-programing-language",
+    "version": "0.1.8-prerelease-2",
+    "publisher": "Helix",
     "engines": {
         "vscode": "^1.94.0"
     },
@@ -20,7 +20,7 @@
         "onLanguage:helix",
         "onCommand:helix.restartLanguageServer"
     ],
-    "main": "./dist/extension.js",
+    "main": "dist/extension.js",
     "contributes": {
         "languages": [
             {
@@ -39,17 +39,17 @@
                     ".helixh"
                 ],
                 "icon": {
-                    "light": "./public/icons/file-helix-v3.svg",
-                    "dark": "./public/icons/file-helix-v3.svg"
+                    "light": "public/icons/file-helix-v3.svg",
+                    "dark": "public/icons/file-helix-v3.svg"
                 },
-                "configuration": "./public/language-configuration.json"
+                "configuration": "public/language-configuration.json"
             }
         ],
         "grammars": [
             {
                 "language": "helix",
                 "scopeName": "source.helix",
-                "path": "./public/syntaxes/helix.tmLanguage.json"
+                "path": "public/syntaxes/helix.tmLanguage.json"
             }
         ],
         "configuration": {
@@ -72,7 +72,7 @@
     },
     "scripts": {
         "lint": "eslint src --ext ts",
-        "start": "node ./dist/extension.js",
+        "start": "node dist/extension.js",
         "build": "npx tsc"
     },
     "devDependencies": {

@@ -1,7 +1,7 @@
-import {ChildProcess, spawn} from 'child_process';
+import { ChildProcess, spawn } from 'child_process';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import {LanguageClient, LanguageClientOptions, StreamInfo} from 'vscode-languageclient/node';
+import { LanguageClient, LanguageClientOptions, StreamInfo } from 'vscode-languageclient/node';
 
 let client: LanguageClient|undefined;
 
@@ -196,7 +196,7 @@ async function createVirtualEnv(
 
     vscode.window.showInformationMessage(
         `Virtual environment created: ${venvPath}`);
-    const requirementsPath = path.resolve(__dirname, '..', 'requirements.txt');
+    const requirementsPath = path.resolve('..', 'requirements.txt');
     await installRequirements(venvPath, requirementsPath);
 
     // wait for the requirements to be installed
@@ -359,7 +359,7 @@ function createServerOptions(helixPath: string, venvPath: string): () =>
     Promise<StreamInfo> {
   return (): Promise<StreamInfo> => {
     return new Promise((resolve, reject) => {
-      const SERVER_SCRIPT_PATH = path.resolve(__dirname, '..', 'server', 'server.py');
+      const SERVER_SCRIPT_PATH = path.resolve('..', 'server.py');
 
       console.log(`[INFO] Server script path: ${SERVER_SCRIPT_PATH}`);
       console.log(`[INFO] Helix binary path: ${helixPath}`);
