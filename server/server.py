@@ -20,6 +20,7 @@ from lsprotocol.types import (
     DidChangeTextDocumentParams,
     DidCloseTextDocumentParams,
     DidOpenTextDocumentParams,
+    DidChangeWatchedFilesParams,
     Position,
     PublishDiagnosticsParams,
     Range,
@@ -28,7 +29,7 @@ from lsprotocol.types import (
 from pygls.lsp.server import LanguageServer
 
 # Constants
-LOG_FILE = os.path.join(os.path.dirname(sys.argv[1]), "lsp.log")
+LOG_FILE = os.path.join(os.path.dirname(__file__), "lsp.log")
 LOG_CLEAR_INTERVAL = 600  # Time in seconds to clear logs periodically
 
 # Logger Configuration
@@ -72,6 +73,20 @@ class HelixLanguageServer(LanguageServer):
         self.analyze_failed = False
         self.basic_parse_failed = False
 
+    @property
+    def server_capabilities(self):
+        """Override server capabilities."""
+        capabilities = super().server_capabilities
+        capabilities.text_document_sync = {
+            "openClose": True,
+            "change": None,  # Disable incremental sync
+            "willSave": False,
+            "willSaveWaitUntil": False,
+            "save": True,
+        }
+        
+        return capabilities
+    
     def _parse_with_analyze(self, document: TextDocumentItem) -> None:
         """Parses a document with --emit-ir flag."""
         with timer() as elapsed:
@@ -194,7 +209,6 @@ class HelixLanguageServer(LanguageServer):
 
 SERVER = HelixLanguageServer("HelixLSP", "1.0")
 
-
 @SERVER.feature(INITIALIZED)
 def on_initialized(server: HelixLanguageServer, params: Any) -> None:
     """Handles server initialization."""
@@ -227,9 +241,9 @@ def did_save(server: HelixLanguageServer, params: DidChangeTextDocumentParams) -
     send_diagnostics(server, params.text_document.uri)
 
 # @SERVER.feature("workspace/didChangeWatchedFiles")
-# def did_change_watched_files(server: HelixLanguageServer, params: DidChangeTextDocumentParams) -> None:
-#     """Handles watched file changes."""
-#     logger.info('Watched files changed: {}', params.text_document.uri)
+# def did_change_watched_files(server: HelixLanguageServer, params: DidChangeWatchedFilesParams) -> None:
+#     """Handles document saving."""
+#     logger.info('Document saved: {}', params.text_document.uri)
 #     doc = server.workspace.get_text_document(params.text_document.uri)
 #     server.queue_parse(doc)
 #     send_diagnostics(server, params.text_document.uri)

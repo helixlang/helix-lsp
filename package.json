@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/helixlang/helix-lsp"
     },
-    "version": "0.1.8-prerelease-2",
+    "version": "0.1.8-prerelease-3",
     "publisher": "Helix",
     "engines": {
         "vscode": "^1.94.0"
@@ -53,14 +53,21 @@
             }
         ],
         "configuration": {
-            "type": "object",
-            "title": "Helix Language Support",
-            "properties": {
-                "helix.compilerPath": {
-                    "type": "string",
-                    "default": "helix",
-                    "description": "The (absolute) path to the Helix compiler executable"
-                }
+            "helix.path": {
+                "type": "string",
+                "default": "helix",
+                "description": "Path to the Helix executable"
+            },
+
+            "helix.pythonPath": {
+                "type": "string",
+                "default": "python",
+                "description": "Path to the Python executable"
+            },
+            "helix.serverPath": {
+                "type": "string",
+                "default": "helix-lsp",
+                "description": "Path to the Helix Language Server executable"
             }
         },
         "commands": [

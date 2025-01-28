@@ -1,13 +1,11 @@
 # Include symlinks
 !./public/**
-!./server/**
 !./config.json
 !./Readme.md
 !./LICENSE.txt
 !./requirements.txt
 
 # Exclude unnecessary files and directories
-node_modules
 *.vsix
 *.log
 *.tmp
@@ -15,3 +13,21 @@ node_modules
 .vscode/**
 .vscode-test/**
 .venv/**
+server/**
+
+# Include symlinks and necessary files
+!./public/**
+!./config.json
+!./README.md
+!./LICENSE.txt
+!./requirements.txt
+
+# Exclude unnecessary files and directories
+.vscode/**
+.vscode-test/**
+*.vsix
+*.log
+*.tmp
+.DS_Store
+
+!node_modules/**

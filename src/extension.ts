@@ -1,7 +1,7 @@
-import { ChildProcess, spawn } from 'child_process';
+import {ChildProcess, spawn} from 'child_process';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { LanguageClient, LanguageClientOptions, StreamInfo } from 'vscode-languageclient/node';
+import {LanguageClient, LanguageClientOptions, StreamInfo} from 'vscode-languageclient/node';
 
 let client: LanguageClient|undefined;
 
@@ -17,16 +17,10 @@ export async function activate(context: vscode.ExtensionContext):
           await restartLanguageServer(context, helixPath);
         }));
 
-    const helixPath =
-        await getOrPromptHelixCompilerPath();  // points to helix/bin/helix
-    if (!helixPath) {
-      vscode.window.showErrorMessage(
-          'Helix compiler path not set. Extension will be deactivated.');
-      return;
-    }
+    const helixPath = await getOrPromptHelixCompilerPath();
 
     const venvPath =
-        await createVirtualEnv(path.resolve(helixPath, '..', '..'));
+        await createVirtualEnv();
     if (!venvPath) {
       vscode.window.showErrorMessage(
           'Virtual environment creation failed. Extension will be deactivated.');
@@ -54,68 +48,48 @@ export async function activate(context: vscode.ExtensionContext):
  * find the installed python path
  */
 async function findPython(): Promise<string> {
-  /// look for both python and python3
-  var pythonPaths =
-      [{command: 'python', found: false}, {command: 'python3', found: false}];
+  /// get the path defined at helix.pythonPath
+  const config = vscode.workspace.getConfiguration('helix');
+  let pythonPath: string|undefined = config.get<string>('pythonPath');
 
-  for (var i = 0; i < pythonPaths.length; i++) {
-    try {
-      await vscode.workspace.fs.stat(vscode.Uri.file(pythonPaths[i].command));
-      pythonPaths[i].found = true;
-    } catch (error) {
-      console.error(`[ERROR] Python path error: ${error}`);
-    }
+  if (!pythonPath) {
+    vscode.window.showErrorMessage(
+        'Python path not set. Extension will be deactivated.');
+    return '';
   }
 
-  // if pyhton3 is found, return it
-  if (pythonPaths[1].found) {
-    return pythonPaths[1].command;
+  try {
+    await vscode.workspace.fs.stat(vscode.Uri.file(pythonPath));
+    return pythonPath;
+  } catch (error) {
+    console.error(`[ERROR] Python path error: ${error}`);
   }
 
-  if (pythonPaths[0].found) {
-    return pythonPaths[0].command;
-  }
-
-  // if no python is found, prompt the user
-  var pythonPath;
   vscode.window.showErrorMessage(
-      `Python path does not exist or is not executable: python or python3`);
-
-  while (!pythonPath) {
-    pythonPath = await vscode.window.showInputBox({
-      prompt:
-          'Could not find python. Please enter the full path or command to python',
-      placeHolder: '/path/to/python',
-    });
-
-    if (pythonPath) {
-      try {
-        await vscode.workspace.fs.stat(vscode.Uri.file(pythonPath));
-        return pythonPath;
-      } catch (error) {
-        console.error(`[ERROR] Python path error: ${error}`);
-        pythonPath = '';
-      }
-    }
-
-    // sleep for 4 seconds
-    await new Promise((resolve) => setTimeout(resolve, 4000));
-  }
-
-  return pythonPath || '';
+      'Python path does not exist or is not executable: ${pythonPath}');
+  return '';
 }
 
 /**
  * Create a virtual environment for the Helix Language Server. and return the
  * python executable path
  * @param pythonPath The python path.
- * @param helixCompilerDir The Helix compiler root dir, the bin is at
- *     `helixCompilerDir/bin/helix`
+ * @param ServerDir The Helix compiler root dir, the bin is at
+ *     `ServerDir/bin/helix`
  * @param envName The name of the virtual environment.
  */
-async function createVirtualEnv(
-    helixCompilerDir: string, envName = 'helix-lsp-venv'): Promise<string> {
-  const venvDir = path.join(helixCompilerDir, envName);
+async function createVirtualEnv(envName = 'helix-lsp-venv'): Promise<string> {
+  // server path is at helix.serverPath
+  const config = vscode.workspace.getConfiguration('helix');
+  const serverPath = config.get<string>('serverPath');
+  if (!serverPath) {
+    vscode.window.showErrorMessage(
+        'Helix server path not set. Extension will be deactivated.');
+    return '';
+  }
+
+  const serverDir = path.dirname(serverPath);
+  const venvDir = path.join(serverDir, envName);
   const venvPythonPathUnix = path.join(venvDir, 'bin', 'python');
   const venvPythonPathWin = path.join(venvDir, 'Scripts', 'python.exe');
 
@@ -196,7 +170,8 @@ async function createVirtualEnv(
 
     vscode.window.showInformationMessage(
         `Virtual environment created: ${venvPath}`);
-    const requirementsPath = path.resolve('..', 'requirements.txt');
+    
+    const requirementsPath = path.join(serverDir, 'requirements.txt');
     await installRequirements(venvPath, requirementsPath);
 
     // wait for the requirements to be installed
@@ -251,15 +226,8 @@ async function restartLanguageServer(
       return;
     }
 
-    const pythonPath = await findPython();
-    if (!pythonPath) {
-      vscode.window.showErrorMessage(
-          'Python path not set. Extension will be deactivated.');
-      return;
-    }
-
     const venvPath =
-        await createVirtualEnv(pythonPath, path.resolve(helixPath, '..', '..'));
+        await createVirtualEnv();
     if (!venvPath) {
       vscode.window.showErrorMessage(
           'Virtual environment creation failed. Extension will be deactivated.');
@@ -304,7 +272,7 @@ export function deactivate(): Thenable<void>|undefined {
  */
 async function getOrPromptHelixCompilerPath(): Promise<string> {
   const config = vscode.workspace.getConfiguration('helix');
-  let helixPath: string|undefined = config.get<string>('compilerPath');
+  let helixPath: string|undefined = config.get<string>('path');
   let helixPathValid = false;
 
   if (helixPath) {
@@ -359,13 +327,21 @@ function createServerOptions(helixPath: string, venvPath: string): () =>
     Promise<StreamInfo> {
   return (): Promise<StreamInfo> => {
     return new Promise((resolve, reject) => {
-      const SERVER_SCRIPT_PATH = path.resolve('..', 'server.py');
+      // path is at helix.serverPath
+        const config = vscode.workspace.getConfiguration('helix');
+        const serverPath = config.get<string>('serverPath');
 
-      console.log(`[INFO] Server script path: ${SERVER_SCRIPT_PATH}`);
+        if (!serverPath) {
+            vscode.window.showErrorMessage(
+                'Helix server path not set. Extension will be deactivated.');
+            return;
+            }
+
+      console.log(`[INFO] Server script path: ${serverPath}`);
       console.log(`[INFO] Helix binary path: ${helixPath}`);
 
       const serverProcess: ChildProcess = spawn(
-          venvPath, [SERVER_SCRIPT_PATH, helixPath],
+          venvPath, [serverPath, helixPath],
           {stdio: ['pipe', 'pipe', 'pipe']});
 
       serverProcess.stdout?.on(
@@ -403,11 +379,11 @@ function createServerOptions(helixPath: string, venvPath: string): () =>
  * @returns LanguageClientOptions for the client configuration.
  */
 function createClientOptions(): LanguageClientOptions {
-  return {
-    documentSelector: [{scheme: 'file', language: 'Helix'}],
-    synchronize: {
-      fileEvents: vscode.workspace.createFileSystemWatcher('**/*.hlx'),
-    },
-    outputChannel: vscode.window.createOutputChannel('Helix Language Server'),
-  };
-}
+    return {
+      documentSelector: [{ scheme: 'file', language: 'helix' }],
+      synchronize: {
+        // File events are not synchronized since only save events are needed
+      },
+      outputChannel: vscode.window.createOutputChannel('Helix Language Server'),
+    };
+  }
