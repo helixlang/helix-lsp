@@ -1,7 +1,7 @@
 {
     "name": "helix-language",
-    "displayName": "Helix Language Support",
-    "description": "Syntax highlighting and full language support for Helix",
+    "displayName": "helix-language",
+    "description": "Minimal language support and syntax highlighting for Helix.",
     "readme": "README.md",
     "icon": "public/icons/helix-v3.ico",
     "repository": {
@@ -72,7 +72,7 @@
         },
         "commands": [
             {
-                "command": "helix.restartLanguageServer",
+                "command": "helix.restartLSP",
                 "title": "helix: Restart Language Server"
             }
         ]

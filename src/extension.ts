@@ -13,7 +13,7 @@ export async function activate(context: vscode.ExtensionContext):
     Promise<void> {
   try {
     context.subscriptions.push(vscode.commands.registerCommand(
-        'helix.restartLanguageServer', async () => {
+        'helix.restartLSP', async () => {
           await restartLanguageServer(context, helixPath);
         }));
 

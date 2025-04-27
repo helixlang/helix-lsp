@@ -294,7 +294,7 @@
                 {
                     "comment": "Function and method keywords",
                     "name": "keyword.function.helix",
-                    "match": "\\b(async|override|virtual|no_panic|fn|inline|macro|op|return|yield)\\b"
+                    "match": "\\b(override|virtual|no_panic|fn|inline|macro|op|return|yield)\\b"
                 },
                 {
                     "comment": "Class and struct keywords",
@@ -329,7 +329,7 @@
                 {
                     "comment": "Concurrency keywords",
                     "name": "keyword.concurrency.helix",
-                    "match": "\\b(atomic|await|spawn|thread)\\b"
+                    "match": "\\b(await|async|thread)\\b"
                 },
                 {
                     "comment": "Other keywords",
