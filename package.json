@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/helixlang/helix-lsp"
     },
-    "version": "0.1.8-prerelease-3",
+    "version": "0.1.9-prerelease-1",
     "publisher": "Helix",
     "engines": {
         "vscode": "^1.94.0"

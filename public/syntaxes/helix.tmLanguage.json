@@ -294,7 +294,7 @@
                 {
                     "comment": "Function and method keywords",
                     "name": "keyword.function.helix",
-                    "match": "\\b(async|fn|inline|macro|op|return|yield)\\b"
+                    "match": "\\b(async|override|virtual|no_panic|fn|inline|macro|op|return|yield)\\b"
                 },
                 {
                     "comment": "Class and struct keywords",
@@ -314,7 +314,7 @@
                 {
                     "comment": "Variable declaration keywords",
                     "name": "keyword.declaration.helix",
-                    "match": "\\b(eval|let|static|const)\\b"
+                    "match": "\\b(eval|var|static|const)\\b"
                 },
                 {
                     "comment": "Access specifiers",

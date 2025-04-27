@@ -9,6 +9,8 @@ build/
 venv/
 .venv/
 
+helix-lsp-venv/
+
 # Clanged Cache
 .clangd/
 .cache/

@@ -305,7 +305,7 @@ async function getOrPromptHelixCompilerPath(): Promise<string> {
         }
 
         await config.update(
-            'compilerPath', helixPath, vscode.ConfigurationTarget.Global);
+            'path', helixPath, vscode.ConfigurationTarget.Global);
 
         vscode.window.showInformationMessage(
             `Helix compiler path set to: ${helixPath}`);
