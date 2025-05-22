@@ -1,12 +1,15 @@
+from concurrent.futures import Future
 import json
 import logging
 import os
+import pathlib
 import re
 import subprocess
 import sys
 import threading
 import time
 from contextlib import contextmanager
+import traceback
 from typing import Any, Dict, List
 from urllib.parse import unquote, urlparse
 
@@ -25,6 +28,7 @@ from lsprotocol.types import (
     PublishDiagnosticsParams,
     Range,
     TextDocumentItem,
+    WorkspaceFolder,
 )
 from pygls.lsp.server import LanguageServer
 
@@ -61,6 +65,47 @@ def timer():
     finally:
         time.time()
 
+
+class CompileCommands:
+    """Class to handle compile commands."""
+
+    def __init__(self, lsp) -> None:
+        # find the compile_commands.json file in the current directory or any parent directory
+        workspace: WorkspaceFolder = lsp.workspace.folders
+
+        if not workspace:
+            logger.error('No workspace folder found.')
+        
+        if len(workspace) > 0:
+            # get the first value for the first key
+            self.path = str(pathlib.Path(unquote(urlparse((list(workspace.values())[0]).uri).path), 'compile_commands.json').absolute())
+        else:
+            self.path = None
+            logger.error('No workspace folder found.')
+        
+        self.commands = []
+
+    def load(self, for_file: str) -> None:
+        """Loads compile commands from a JSON file."""
+        if not self.path:
+            return [];
+
+        if not os.path.exists(self.path):
+            logger.error('Compile commands file not found: %s', self.path)
+            return
+
+        with open(self.path, 'r') as f:
+            cmds = json.load(f)
+
+        for cmd in cmds:
+            if cmd.get('file') == for_file:
+                if cmd.get('command') is not None:
+                    self.commands.extend(list(cmd.get('command')))
+                break
+        else:
+            logger.warning('No compile command found for file: %s', for_file)
+            return
+        logger.info('Loaded compile commands for %s: %s', for_file, self.commands)
 
 class HelixLanguageServer(LanguageServer):
     """Custom Language Server for Helix."""
@@ -126,33 +171,49 @@ class HelixLanguageServer(LanguageServer):
 
             helix_path = sys.argv[1]
             if not os.path.exists(helix_path):
-                logger.critical('Helix binary not found at: {}', helix_path)
+                logger.critical('Helix binary not found at: %s', helix_path)
                 raise FileNotFoundError(
                     f"Helix binary does not exist: {helix_path}")
-
+            
+            # we also need to add compile commands from compile_commands.json if the file matches
+            # we keep going up the path until we find compile_commands.json
+            compile_commands_path = None
             command = [helix_path, file_path, "--lsp-mode"]
+            
+            cmds = CompileCommands(self)
+            cmds.load(file_path)
+            
+            if cmds.commands:
+                command.extend(cmds.commands)
+                logger.debug('Loaded compile commands for %s: %s', file_path, cmds)
 
             if analyze:
                 command.append("--emit-ir")
+
+            # output cmd to stderr
+            sys.stderr.write(f"Command: {command}\n")
+            sys.stderr.flush()
 
             process = subprocess.Popen(
                 command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout, stderr = process.communicate()
 
             if stderr:
-                logger.error('Helix stderr: {}', stderr.decode('utf-8'))
+                logger.error('Helix stderr: %s', stderr.decode('utf-8'))
 
             if process.returncode == 0:
-                logger.info('Compile successful for {}', file_path)
+                logger.info('Compile successful for %s', file_path)
                 self.diagnostics[document.uri] = (document.version, [])
                 return True
 
             result = stdout.decode('utf-8').strip()
             result = self._remove_ansi_colors(result)
-
+            
+            sys.stderr.write(f"Result: {result}\n")
+            sys.stderr.flush()
             
             if not result and process.returncode != 0:
-                logger.warning('Empty or invalid result from Helix for {}', file_path)
+                logger.warning('Empty or invalid result from Helix for %s', str(file_path))
                 self.diagnostics[document.uri] = (document.version, diagnostics)
                 return False
 
@@ -160,10 +221,12 @@ class HelixLanguageServer(LanguageServer):
             diagnostics = self._convert_to_diagnostics(json_result)
 
             self.diagnostics[document.uri] = (document.version, diagnostics)
-            logger.debug('Parsed diagnostics for {}: {}',
-                         file_path, diagnostics)
+            logger.debug('Parsed diagnostics for %s: %s',
+                            file_path, diagnostics)
         except Exception as e:
-            logger.error('Error parsing document {}: {}', document.uri, e)
+            # print the entire traceback
+            traceback.print_exc()
+            logger.error('Error parsing document {}: {}', str(document.uri), str(e))
 
         if not analyze:
             return not bool([d for d in diagnostics if d.severity == DiagnosticSeverity.Error])
@@ -218,7 +281,7 @@ def on_initialized(server: HelixLanguageServer, params: Any) -> None:
 @SERVER.feature(TEXT_DOCUMENT_DID_OPEN)
 def did_open(server: HelixLanguageServer, params: DidOpenTextDocumentParams) -> None:
     """Handles document opening."""
-    logger.info('Document opened: {}', params.text_document.uri)
+    logger.info('Document opened: %s', params.text_document.uri)
     doc = server.workspace.get_text_document(params.text_document.uri)
     server.queue_parse(doc)
     send_diagnostics(server, params.text_document.uri)
@@ -227,7 +290,7 @@ def did_open(server: HelixLanguageServer, params: DidOpenTextDocumentParams) -> 
 @SERVER.feature(TEXT_DOCUMENT_DID_CLOSE)
 def did_close(server: HelixLanguageServer, params: DidCloseTextDocumentParams) -> None:
     """Handles document closing."""
-    logger.info('Document closed: {}', params.text_document.uri)
+    logger.info('Document closed: %s', params.text_document.uri)
     server.diagnostics.pop(params.text_document.uri, None)
     send_diagnostics(server, params.text_document.uri)
 
@@ -235,7 +298,7 @@ def did_close(server: HelixLanguageServer, params: DidCloseTextDocumentParams) -
 @SERVER.feature(TEXT_DOCUMENT_DID_SAVE)
 def did_save(server: HelixLanguageServer, params: DidChangeTextDocumentParams) -> None:
     """Handles document saving."""
-    logger.info('Document saved: {}', params.text_document.uri)
+    logger.info('Document saved: %s', params.text_document.uri)
     doc = server.workspace.get_text_document(params.text_document.uri)
     server.queue_parse(doc)
     send_diagnostics(server, params.text_document.uri)
@@ -243,14 +306,14 @@ def did_save(server: HelixLanguageServer, params: DidChangeTextDocumentParams) -
 # @SERVER.feature("workspace/didChangeWatchedFiles")
 # def did_change_watched_files(server: HelixLanguageServer, params: DidChangeWatchedFilesParams) -> None:
 #     """Handles document saving."""
-#     logger.info('Document saved: {}', params.text_document.uri)
+#     logger.info('Document saved: %s', params.text_document.uri)
 #     doc = server.workspace.get_text_document(params.text_document.uri)
 #     server.queue_parse(doc)
 #     send_diagnostics(server, params.text_document.uri)
 
 def send_diagnostics(server: HelixLanguageServer, uri: str) -> None:
     """Sends diagnostics to the client."""
-    logger.debug('Diagnostics sent for {}: {}',
+    logger.debug('Diagnostics sent for %s: %s',
                  uri, server.diagnostics.get(uri))
     for _uri, (version, diagnostics) in server.diagnostics.items():
         diagnostic = PublishDiagnosticsParams(
@@ -283,4 +346,7 @@ if __name__ == "__main__":
         LogClearerThread(LOG_CLEAR_INTERVAL).start()
         SERVER.start_io()
     except Exception as e:
-        logger.critical('Server encountered a fatal error: {}', e)
+        logger.critical('Server encountered a fatal error: %s', e)
+        # save the error to the log file
+        with open(os.path.join(os.path.dirname(__file__), "error.log"), "a") as f:
+            f.write(f"Fatal error: {e}\n")

@@ -294,17 +294,17 @@
                 {
                     "comment": "Function and method keywords",
                     "name": "keyword.function.helix",
-                    "match": "\\b(override|virtual|no_panic|fn|inline|macro|op|return|yield)\\b"
+                    "match": "\\b(override|virtual|fn|inline|macro|op|return|yield)\\b"
                 },
                 {
                     "comment": "Class and struct keywords",
                     "name": "keyword.class.helix",
-                    "match": "\\b(class|enum|struct|type|extend)\\b"
+                    "match": "\\b(class|enum|struct|type)\\b"
                 },
                 {
                     "comment": "Inheritance and polymorphism keywords",
                     "name": "keyword.inheritance.helix",
-                    "match": "\\b(extend|derives|interface|requires|with|has)\\b"
+                    "match": "\\b(extend|derives|where|interface|requires|impl)\\b"
                 },
                 {
                     "comment": "Error handling keywords",
@@ -324,7 +324,7 @@
                 {
                     "comment": "Module importing keywords",
                     "name": "keyword.import.helix",
-                    "match": "\\b(as|ffi|import)\\b"
+                    "match": "\\b(ffi|import)\\b"
                 },
                 {
                     "comment": "Concurrency keywords",
@@ -334,12 +334,12 @@
                 {
                     "comment": "Other keywords",
                     "name": "keyword.other.helix",
-                    "match": "\\b(delete|unsafe)\\b"
+                    "match": "\\b(sizeof|alignof|typeof|as|delete|unsafe)\\b"
                 },
                 {
                     "comment": "Primitive Type keywords",
                     "name": "keyword.primitive.helix",
-                    "match": "\\b(f32|f64|i128|i16|i32|i64|i8|isize|u128|u16|u32|u64|u8|usize|char|bool|void)\\b"
+                    "match": "\\b(f32|f64|f80|i256|f128|i128|i16|i32|i64|i8|isize|u128|u256|u16|u32|u64|u8|usize|char|bool|void)\\b"
                 },
                 {
                     "comment": "Operators",
