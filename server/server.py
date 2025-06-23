@@ -12,6 +12,7 @@ from contextlib import contextmanager
 import traceback
 from typing import Any, Dict, List
 from urllib.parse import unquote, urlparse
+from pathlib import Path
 
 from lsprotocol.types import (
     INITIALIZED,
@@ -65,6 +66,25 @@ def timer():
     finally:
         time.time()
 
+def compare_paths(path1, path2, case_sensitive=True):
+    # Convert to Path objects
+    p1 = Path(path1)
+    p2 = Path(path2)
+    
+    # Resolve to absolute, normalized paths
+    try:
+        resolved_p1 = p1.resolve()
+        resolved_p2 = p2.resolve()
+    except (FileNotFoundError, OSError):
+        # If paths don't exist, fall back to normalization without resolving
+        resolved_p1 = p1.absolute().normalize()
+        resolved_p2 = p2.absolute().normalize()
+    
+    # Compare paths, accounting for case sensitivity
+    if case_sensitive:
+        return resolved_p1 == resolved_p2
+    
+    return resolved_p1.lower() == resolved_p2.lower()
 
 class CompileCommands:
     """Class to handle compile commands."""
@@ -218,7 +238,7 @@ class HelixLanguageServer(LanguageServer):
                 return False
 
             json_result = json.loads(result)
-            diagnostics = self._convert_to_diagnostics(json_result)
+            diagnostics = self._convert_to_diagnostics(json_result, file_path)
 
             self.diagnostics[document.uri] = (document.version, diagnostics)
             logger.debug('Parsed diagnostics for %s: %s',
@@ -243,16 +263,21 @@ class HelixLanguageServer(LanguageServer):
         return ansi_escape_pattern.sub('', text)
 
     @staticmethod
-    def _convert_to_diagnostics(json_result: dict) -> List[Diagnostic]:
+    def _convert_to_diagnostics(json_result: dict, file_path: str) -> List[Diagnostic]:
         """Converts JSON output to a list of LSP diagnostics."""
         diagnostics = []
         for error in json_result.get("error", {}).get("errors", []):
             severity = {
                 "error": DiagnosticSeverity.Error,
-                "note": DiagnosticSeverity.Hint,
+                "note": DiagnosticSeverity.Information,
                 "warn": DiagnosticSeverity.Warning,
                 "fatal": DiagnosticSeverity.Error,
             }.get(str(error["level"]).strip(), DiagnosticSeverity.Information)
+        
+            if not compare_paths(error["file"].replace("\\\\", "\\"), file_path):
+                logger.warning('File path mismatch: {} != {}',
+                               os.path.abspath(error["file"].lstrip('/')), file_path)
+                continue
 
             diagnostics.append(
                 Diagnostic(

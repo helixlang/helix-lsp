@@ -18,7 +18,7 @@
     ],
     "activationEvents": [
         "onLanguage:helix",
-        "onCommand:helix.restartLanguageServer"
+        "onCommand:helix.restartLSP"
     ],
     "main": "dist/extension.js",
     "contributes": {
