@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/helixlang/helix-lsp"
     },
-    "version": "0.2.1",
+    "version": "0.2.2",
     "publisher": "helix-lang",
     "engines": {
         "vscode": "^1.94.0"
@@ -41,8 +41,7 @@
                 "icon": {
                     "light": "public/icons/file-helix-v3.svg",
                     "dark": "public/icons/file-helix-v3.svg"
-                },
-                "configuration": "public/language-configuration.json"
+                }
             }
         ],
         "grammars": [
@@ -53,21 +52,23 @@
             }
         ],
         "configuration": {
-            "helix.path": {
-                "type": "string",
-                "default": "helix",
-                "description": "Path to the Helix executable"
-            },
+            "properties": {
+                "helix.path": {
+                    "type": "string",
+                    "default": "helix",
+                    "description": "Path to the Helix executable"
+                },
 
-            "helix.pythonPath": {
-                "type": "string",
-                "default": "python",
-                "description": "Path to the Python executable"
-            },
-            "helix.serverPath": {
-                "type": "string",
-                "default": "helix-lsp",
-                "description": "Path to the Helix Language Server executable"
+                "helix.pythonPath": {
+                    "type": "string",
+                    "default": "python",
+                    "description": "Path to the Python executable"
+                },
+                "helix.serverPath": {
+                    "type": "string",
+                    "default": "helix-lsp",
+                    "description": "Path to the Helix Language Server executable"
+                }
             }
         },
         "commands": [

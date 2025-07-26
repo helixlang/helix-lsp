@@ -87,8 +87,30 @@
         "comments": {
             "patterns": [
                 {
+                    "name": "comment.line.doxygen",
+                    "match": "///.*$",
+                    "captures": {
+                        "0": { "name": "comment.line.doxygen" }
+                    },
+                    "patterns": [
+                        {
+                            "name": "keyword.other.doxygen",
+                            "match": "\\\\(param|return|brief|note|warning|see|throws|exception|retval|sa|ingroup|author|date|version)\\b"
+                        }
+                    ]
+                },
+                {
                     "name": "comment.line.helix",
-                    "match": "//.*$"
+                    "match": "//.*$",
+                    "captures": {
+                        "0": { "name": "comment.line.helix" }
+                    },
+                    "patterns": [
+                        {
+                            "name": "invalid.illegal.doxygen",
+                            "match": "\\\\(param|return|brief|note|warning|see|throws|exception|retval|sa|ingroup|author|date|version)\\b"
+                        }
+                    ]
                 }
             ]
         },
