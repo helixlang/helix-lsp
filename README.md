@@ -131,3 +131,9 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Support
 For bugs or feature requests, open an issue on the [GitHub repository](https://github.com/helixlang/helix-lsp.git). Include your `settings.json` (with sensitive paths redacted) and any relevant logs.
+
+
+
+FIX:
+
+Failed to activate Helix Language Server Client: CodeExpectedError: Unable to write to User Settings because helix.path is not a registered configuration.

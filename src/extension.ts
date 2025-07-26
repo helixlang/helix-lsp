@@ -12,12 +12,12 @@ let client: LanguageClient|undefined;
 export async function activate(context: vscode.ExtensionContext):
     Promise<void> {
   try {
-    context.subscriptions.push(vscode.commands.registerCommand(
-        'helix.restartLSP', async () => {
-          await restartLanguageServer(context, helixPath);
-        }));
-
     const helixPath = await getOrPromptHelixCompilerPath();
+
+    context.subscriptions.push(vscode.commands.registerCommand(
+    'helix.restartLSP', async () => {
+        await restartLanguageServer(context, helixPath);
+    }));
 
     const venvPath =
         await createVirtualEnv();
@@ -218,8 +218,7 @@ async function restartLanguageServer(
       await client.stop();
     }
 
-    const helixPath =
-        await getOrPromptHelixCompilerPath();  // points to helix/bin/helix
+    const helixPath = await getOrPromptHelixCompilerPath();  // points to helix/bin/helix
     if (!helixPath) {
       vscode.window.showErrorMessage(
           'Helix compiler path not set. Extension will be deactivated.');
