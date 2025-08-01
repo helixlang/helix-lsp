@@ -25,9 +25,6 @@
             "include": "#types"
         },
         {
-            "include": "#keywords"
-        },
-        {
             "include": "#define"
         },
         {
@@ -38,6 +35,9 @@
         },
         {
             "include": "#strings"
+        },
+        {
+            "include": "#keywords"
         },
         {
             "include": "#variables"
@@ -598,7 +598,7 @@
             "patterns": [
                 {
                     "name": "string.quoted.double.helix",
-                    "begin": "(\\b[fF])([bBuU])?((['\"]))",
+                    "begin": "(\\b[fFrRuUbB])([bBuU])?((['\"]))",
                     "beginCaptures": {
                         "1": {
                             "name": "keyword.other.f-string.helix"
