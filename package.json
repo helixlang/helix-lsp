@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/helixlang/helix-lsp"
     },
-    "version": "0.2.5",
+    "version": "0.2.6",
     "publisher": "helix-lang",
     "engines": {
         "vscode": "^1.94.0"
@@ -76,6 +76,23 @@
             {
                 "command": "helix.restartLSP",
                 "title": "helix: Restart Language Server"
+            }
+        ],
+         "breakpoints": [
+            {
+                "language": "helix"
+            }
+        ],
+        "debuggers": [
+            {
+                "type": "cppvsdbg",
+                "label": "C++ (MSVC) Debugger (Helix)",
+                "languages": ["helix"]
+            },
+            {
+                "type": "cppdbg",
+                "label": "C++ (GDB/LLDB) Debugger (Helix)",
+                "languages": ["helix"]
             }
         ]
     },

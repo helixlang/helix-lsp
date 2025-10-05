@@ -12,6 +12,7 @@ from contextlib import contextmanager
 import traceback
 from typing import Any, Dict, List
 from urllib.parse import unquote, urlparse
+from urllib.request import url2pathname
 from pathlib import Path
 
 from lsprotocol.types import (
@@ -44,7 +45,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger("HelixLSP")
-logger.propagate = False
+logger.propagate = True
 
 # Helper Functions
 
@@ -90,25 +91,29 @@ class CompileCommands:
     """Class to handle compile commands."""
 
     def __init__(self, lsp) -> None:
-        # find the compile_commands.json file in the current directory or any parent directory
-        workspace: WorkspaceFolder = lsp.workspace.folders
+        workspace = lsp.workspace.folders
 
         if not workspace:
             logger.error('No workspace folder found.')
-        
-        if len(workspace) > 0:
-            # get the first value for the first key
-            self.path = str(pathlib.Path(unquote(urlparse((list(workspace.values())[0]).uri).path), 'compile_commands.json').absolute())
-        else:
             self.path = None
-            logger.error('No workspace folder found.')
-        
+            self.commands = []
+            return
+
+        uri = (list(workspace.values())[0]).uri
+        parsed = urlparse(uri)
+        win_path = url2pathname(unquote(parsed.path))
+        # normalize drive to uppercase
+        p = pathlib.Path(win_path).absolute()
+        if p.drive:
+            p = pathlib.Path(p.drive.upper() + str(p)[len(p.drive):])
+        self.path = str(p / "compile_commands.json")
+
         self.commands = []
 
     def load(self, for_file: str) -> None:
         """Loads compile commands from a JSON file."""
         if not self.path:
-            return [];
+            return
 
         if not os.path.exists(self.path):
             logger.error('Compile commands file not found: %s', self.path)
@@ -117,14 +122,24 @@ class CompileCommands:
         with open(self.path, 'r') as f:
             cmds = json.load(f)
 
+        norm_for_file = os.path.normcase(os.path.abspath(for_file))
+
         for cmd in cmds:
-            if cmd.get('file') == for_file:
-                if cmd.get('command') is not None:
-                    self.commands.extend(list(cmd.get('command')))
+            file_path = os.path.normcase(os.path.abspath(cmd.get('file', '')))
+            if file_path == norm_for_file:
+                command = cmd.get('arguments')
+                if command:
+                    if isinstance(command, str):
+                        # split string into args
+                        self.commands.extend(command.split())
+                    elif isinstance(command, list):
+                        # already a list of args
+                        self.commands.extend(command)
                 break
         else:
             logger.warning('No compile command found for file: %s', for_file)
             return
+
         logger.info('Loaded compile commands for %s: %s', for_file, self.commands)
 
 class HelixLanguageServer(LanguageServer):
