@@ -20,6 +20,7 @@ import traceback
 from lsprotocol.types import (
     INITIALIZED,
     TEXT_DOCUMENT_DID_CLOSE,
+    TEXT_DOCUMENT_CODE_ACTION,
     TEXT_DOCUMENT_DID_OPEN,
     TEXT_DOCUMENT_DID_SAVE,
     Diagnostic,
@@ -31,6 +32,11 @@ from lsprotocol.types import (
     DidSaveTextDocumentParams,
     Position,
     Range,
+    CodeActionParams,
+    CodeAction,
+    ExecuteCommandParams,
+    CodeActionKind,
+    Command,
     TextDocumentItem,
 )
 from pygls.lsp.server import LanguageServer
@@ -200,6 +206,140 @@ class CompileCommands:
         else:
             logger.debug("No compile command found for %s", for_file)
 
+
+def extract_cpp_from_ir(helix_path: str, compile_db: 'CompileCommands', file: str, line_range: str | None = None) -> str:
+    """
+    Run the Helix compiler to emit IR for the given file, trim boilerplate,
+    extract the mapped C++ for the specified line range, and return formatted output.
+    Respects compile_commands.json from the running LSP server.
+    """
+    logger = logging.getLogger("HelixLSP")
+
+    if not os.path.exists(helix_path):
+        raise FileNotFoundError(f"Helix binary not found: {helix_path}")
+
+    compile_db.load(file)
+    cmd = [helix_path, file, "--emit-ir", "--verbose"]
+
+    if compile_db.commands:
+        cmd.extend(compile_db.commands)
+
+    logger.info(f"Running Helix IR emission for {file}")
+    proc = subprocess.run(cmd, capture_output=True, text=True)
+    output = proc.stdout
+
+    if not output.strip():
+        raise RuntimeError("No output received from Helix compiler")
+
+    # --- Trim preamble ---
+    hdr_pat = re.compile(r"#define __HELIX_CORE_CXX__.*?#endif", re.DOTALL)
+    m = hdr_pat.search(output)
+    if m:
+        output = output[m.end():]
+
+    # Trim everything after the last #endif (Helix emits multiple files)
+    last_endif = output.rfind("#endif")
+    if last_endif != -1:
+        output = output[:last_endif + len("#endif")]
+
+    # --- Remove ANSI color codes ---
+    ansi_escape = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
+    output = ansi_escape.sub('', output)
+
+    # --- Build mapping: file → [lines] ---
+    file_lines: dict[str, list[str]] = {}
+    current_file = None
+    current_macro = None
+    current_line = None
+    in_guard_section = False
+
+    for raw in output.splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+
+        # detect new file section
+        if line.startswith("#define") and len(line.split()) == 3:
+            _, macro, path_token = line.split(maxsplit=2)
+            current_file = path_token.strip('"')
+            current_macro = macro
+            current_line = None
+            in_guard_section = False
+            file_lines.setdefault(current_file, [])
+            continue
+
+        if line.startswith("#line") and current_file:
+            parts = line.split()
+            try:
+                ln = int(parts[1])
+            except Exception:
+                continue
+
+            # second #line 1 marks the start of real code
+            if len(parts) == 3 and parts[2] == current_macro:
+                if in_guard_section:
+                    file_lines[current_file] = []
+                in_guard_section = True
+                current_line = ln - 1
+            elif len(parts) == 2:
+                current_line = ln - 1
+            continue
+
+        if line.startswith("#"):
+            continue
+
+        if current_file is None or current_line is None:
+            continue
+
+        lines = file_lines[current_file]
+        while len(lines) <= current_line:
+            lines.append("")
+        if lines[current_line]:
+            lines[current_line] += "\n" + raw
+        else:
+            lines[current_line] = raw
+        current_line += 1
+
+    # --- Match file ---
+    found_file = next((p for p in file_lines if p.endswith(file)), None)
+    if not found_file:
+        raise RuntimeError(f"No matching file section found for {file}")
+
+    lines = file_lines[found_file]
+
+    # --- Parse range ---
+    if not line_range:
+        start_line, end_line = 1, len(lines)
+    elif ":" in line_range:
+        start_line, end_line = map(int, line_range.split(":"))
+    elif "-" in line_range:
+        start_line, end_line = map(int, line_range.split("-"))
+    else:
+        start_line = end_line = int(line_range)
+
+    start_line = max(1, start_line)
+    end_line = max(start_line, end_line)
+
+    if start_line > len(lines):
+        raise IndexError(f"Start line {start_line} beyond file end ({len(lines)}).")
+
+    isolated = lines[start_line - 1:end_line]
+    isolated_code = "\n".join(l for l in isolated if l.strip())
+    if not isolated_code.strip():
+        raise RuntimeError(f"No content found in range {start_line}-{end_line}.")
+
+    # --- clang-format ---
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".cpp", mode="w") as tmp:
+        tmp.write(isolated_code)
+        tmp_path = tmp.name
+
+    try:
+        fmt = subprocess.run(["clang-format", "-style=file", tmp_path],
+                             capture_output=True, text=True)
+        return fmt.stdout if fmt.returncode == 0 else isolated_code
+    finally:
+        if os.path.exists(tmp_path):
+            os.remove(tmp_path)
 
 # ---------------------------------------------------------------------- #
 # HelixLanguageServer
@@ -384,6 +524,22 @@ def did_save(server: HelixLanguageServer, params: DidChangeTextDocumentParams) -
     server.queue_parse(doc)
     send_diagnostics(server, uri)
 
+@SERVER.command("helix.showIR")
+def show_ir(server: HelixLanguageServer, params: ExecuteCommandParams):
+    """Handles actual IR generation when command is invoked."""
+    logger.info(f"Received helix.showIR for {params}")
+    try:
+        uri, start_line, end_line = params.arguments
+        file = Path(url2pathname(unquote(urlparse(uri).path))).absolute()
+        line_range = f"{start_line}:{end_line}"
+
+        result = extract_cpp_from_ir(
+            server.helix_path, server.compile_db, str(file), line_range
+        )
+        return result
+    except Exception as e:
+        logger.exception("Show IR failed")
+        return f"Error: {e}"
 
 def send_diagnostics(server: HelixLanguageServer, uri: str) -> None:
     diag = server.diagnostics.get(uri)

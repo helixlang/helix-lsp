@@ -14,13 +14,12 @@ export async function activate(context: vscode.ExtensionContext):
   try {
     const helixPath = await getOrPromptHelixCompilerPath();
 
-    context.subscriptions.push(vscode.commands.registerCommand(
-    'helix.restartLSP', async () => {
-        await restartLanguageServer(context, helixPath);
-    }));
+    context.subscriptions.push(
+        vscode.commands.registerCommand('helix.restartLSP', async () => {
+          await restartLanguageServer(context, helixPath);
+        }));
 
-    const venvPath =
-        await createVirtualEnv();
+    const venvPath = await createVirtualEnv();
     if (!venvPath) {
       vscode.window.showErrorMessage(
           'Virtual environment creation failed. Extension will be deactivated.');
@@ -170,7 +169,7 @@ async function createVirtualEnv(envName = 'helix-lsp-venv'): Promise<string> {
 
     vscode.window.showInformationMessage(
         `Virtual environment created: ${venvPath}`);
-    
+
     const requirementsPath = path.join(serverDir, 'requirements.txt');
     await installRequirements(venvPath, requirementsPath);
 
@@ -218,15 +217,15 @@ async function restartLanguageServer(
       await client.stop();
     }
 
-    const helixPath = await getOrPromptHelixCompilerPath();  // points to helix/bin/helix
+    const helixPath =
+        await getOrPromptHelixCompilerPath();  // points to helix/bin/helix
     if (!helixPath) {
       vscode.window.showErrorMessage(
           'Helix compiler path not set. Extension will be deactivated.');
       return;
     }
 
-    const venvPath =
-        await createVirtualEnv();
+    const venvPath = await createVirtualEnv();
     if (!venvPath) {
       vscode.window.showErrorMessage(
           'Virtual environment creation failed. Extension will be deactivated.');
@@ -327,21 +326,20 @@ function createServerOptions(helixPath: string, venvPath: string): () =>
   return (): Promise<StreamInfo> => {
     return new Promise((resolve, reject) => {
       // path is at helix.serverPath
-        const config = vscode.workspace.getConfiguration('helix');
-        const serverPath = config.get<string>('serverPath');
+      const config = vscode.workspace.getConfiguration('helix');
+      const serverPath = config.get<string>('serverPath');
 
-        if (!serverPath) {
-            vscode.window.showErrorMessage(
-                'Helix server path not set. Extension will be deactivated.');
-            return;
-            }
+      if (!serverPath) {
+        vscode.window.showErrorMessage(
+            'Helix server path not set. Extension will be deactivated.');
+        return;
+      }
 
       console.log(`[INFO] Server script path: ${serverPath}`);
       console.log(`[INFO] Helix binary path: ${helixPath}`);
 
       const serverProcess: ChildProcess = spawn(
-          venvPath, [serverPath, helixPath],
-          {stdio: ['pipe', 'pipe', 'pipe']});
+          venvPath, [serverPath, helixPath], {stdio: ['pipe', 'pipe', 'pipe']});
 
       serverProcess.stdout?.on(
           'data',
@@ -378,11 +376,11 @@ function createServerOptions(helixPath: string, venvPath: string): () =>
  * @returns LanguageClientOptions for the client configuration.
  */
 function createClientOptions(): LanguageClientOptions {
-    return {
-      documentSelector: [{ scheme: 'file', language: 'helix' }],
-      synchronize: {
+  return {
+    documentSelector: [{scheme: 'file', language: 'helix'}],
+    synchronize: {
         // File events are not synchronized since only save events are needed
-      },
-      outputChannel: vscode.window.createOutputChannel('Helix Language Server'),
-    };
-  }
+    },
+    outputChannel: vscode.window.createOutputChannel('Helix Language Server'),
+  };
+}

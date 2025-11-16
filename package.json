@@ -76,6 +76,10 @@
             {
                 "command": "helix.restartLSP",
                 "title": "helix: Restart Language Server"
+            },
+            {
+                "command": "helix.showIR",
+                "title": "Helix: Show IR"
             }
         ],
          "breakpoints": [
