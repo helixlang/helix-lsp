@@ -1,7 +1,7 @@
-import { ChildProcess, spawn } from 'child_process';
+import {ChildProcess, spawn} from 'child_process';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import { LanguageClient, LanguageClientOptions, StreamInfo } from 'vscode-languageclient/node';
+import {LanguageClient, LanguageClientOptions, StreamInfo} from 'vscode-languageclient/node';
 
 let client: LanguageClient|undefined;
 
@@ -30,10 +30,14 @@ export async function activate(context: vscode.ExtensionContext):
     const clientOptions = createClientOptions();
 
     client = new LanguageClient(
-        'KairoVscodeLSP', 'Kairo Language Support', serverOptions,
-        clientOptions);
+        'KairoVscodeLSP',
+        'Kairo Language Support',
+        serverOptions,
+        clientOptions
+    );
 
-    client.start();
+
+    await client.start();
 
     context.subscriptions.push(client);
   } catch (error) {
@@ -142,17 +146,18 @@ async function createVirtualEnv(envName = 'kairo-lsp-venv'): Promise<string> {
     throw error;
   });
 
-  venvProcess.on('close', (code: number) => {
-    if (code !== 0) {
-      console.error(`[ERROR] Venv process exited with code ${code}`);
-      throw new Error(`Venv process exited with code ${code}`);
-    } else {
-      console.log(`[INFO] Venv process exited successfully with code ${code}`);
-    }
-  });
+  await new Promise<void>((resolve, reject) => {
+    const proc = spawn(pythonPath, ['-m', 'venv', venvDir]);
 
-  // wait for the virtual environment to be created
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+    proc.on('error', reject);
+
+    proc.on('exit', code => {
+      if (code === 0)
+        resolve();
+      else
+        reject(new Error(`venv failed: ${code}`));
+    });
+  });
 
   // verify the virtual environment was created
   try {
@@ -240,7 +245,7 @@ async function restartLanguageServer(
         clientOptions);
 
     vscode.window.showInformationMessage('Restarting Kairo Language Server...');
-    client.start();
+    await client.start();
 
     context.subscriptions.push(client);
   } catch (error) {

@@ -16,6 +16,7 @@ from urllib.request import url2pathname
 from pathlib import Path
 import sys
 import traceback
+import tempfile
 
 from lsprotocol.types import (
     INITIALIZED,
@@ -135,6 +136,7 @@ class CompileCommands:
         if p.drive:
             p = pathlib.Path(p.drive.upper() + str(p)[len(p.drive):])
 
+        self.directory = str(p)
         self.path = str(p / "compile_commands.json")
         self._last_mtime: float = 0.0
         self._commands_map: dict[str, list[str]] = {}
@@ -225,7 +227,7 @@ def extract_cpp_from_ir(kairo_path: str, compile_db: 'CompileCommands', file: st
         cmd.extend(compile_db.commands)
 
     logger.info(f"Running Kairo IR emission for {file}")
-    proc = subprocess.run(cmd, capture_output=True, text=True)
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
     output = proc.stdout
 
     if not output.strip():
@@ -392,7 +394,7 @@ class KairoLanguageServer(LanguageServer):
         try:
             uri_path = urlparse(document.uri).path
             decoded_path = unquote(uri_path)
-            file_path = os.path.abspath(decoded_path.lstrip("/"))
+            file_path = os.path.abspath(decoded_path)
 
             if not self.kairo_path or not os.path.exists(self.kairo_path):
                 logger.critical("Kairo binary not found: %s", self.kairo_path)
@@ -408,7 +410,22 @@ class KairoLanguageServer(LanguageServer):
             if analyze:
                 command.append("--emit-ir")
 
-            process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            env = os.environ.copy()
+
+            logger.info("Launching with env:")
+            for k, v in env.items():
+                logger.info("%s=%s", k, v)
+
+            env["PWD"] = self.compile_db.directory
+
+            logger.info(f"Running command: {' '.join(command)} in {self.compile_db.directory}")
+            process = subprocess.Popen(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=self.compile_db.directory,
+                env=env,
+            )
             try:
                 stdout, stderr = process.communicate(timeout=10)  # 10 second timeout
             except subprocess.TimeoutExpired:
