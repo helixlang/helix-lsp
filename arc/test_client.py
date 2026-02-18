@@ -25,7 +25,7 @@ def start_lsp_client():
             "method": "initialize",
             "params": {
                 "processId": None,
-                "rootUri": "file:///C:/Projects/my-shit/Helix/Helix-lang",
+                "rootUri": "file:///C:/Projects/my-shit/Kairo/Kairo-lang",
                 "capabilities": {},
             }
         }
@@ -37,10 +37,10 @@ def start_lsp_client():
             "method": "textDocument/didOpen",
             "params": {
                 "textDocument": {
-                    "uri": "file:///C:/Projects/my-shit/Helix/Helix-lang/tests/main.hlx",
-                    "languageId": "hlx",
+                    "uri": "file:///C:/Projects/my-shit/Kairo/Kairo-lang/tests/main.kro",
+                    "languageId": "kro",
                     "version": 1,
-                    "text": open("C:/Projects/my-shit/Helix/Helix-lang/tests/main.hlx").read()
+                    "text": open("C:/Projects/my-shit/Kairo/Kairo-lang/tests/main.kro").read()
                 }
             }
         }

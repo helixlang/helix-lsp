@@ -5,9 +5,9 @@
     <key>version</key>
     <string>0.2.2</string>
     <key>scopeName</key>
-    <string>source.Helix</string>
+    <string>source.Kairo</string>
     <key>name</key>
-    <string>Helix</string>
+    <string>Kairo</string>
     <key>patterns</key>
     <array>
       <dict>
@@ -75,7 +75,7 @@
         <array>
           <dict>
             <key>name</key>
-            <string>comment.line.Helix</string>
+            <string>comment.line.Kairo</string>
             <key>match</key>
             <string>//.*$</string>
           </dict>
@@ -89,7 +89,7 @@
             <key>comment</key>
             <string>block comments</string>
             <key>name</key>
-            <string>comment.block.Helix</string>
+            <string>comment.block.Kairo</string>
             <key>begin</key>
             <string>/\*</string>
             <key>end</key>
@@ -103,31 +103,31 @@
         <array>
           <dict>
             <key>name</key>
-            <string>constant.numeric.decimal.Helix</string>
+            <string>constant.numeric.decimal.Kairo</string>
             <key>match</key>
             <string>\b\d[\d_]*(\.?)[\d_]*(?:(E|e)([+-]?)([\d_]+))?\b</string>
           </dict>
           <dict>
             <key>name</key>
-            <string>constant.numeric.hex.Helix</string>
+            <string>constant.numeric.hex.Kairo</string>
             <key>match</key>
             <string>\b0x[\da-fA-F_]+\b</string>
           </dict>
           <dict>
             <key>name</key>
-            <string>constant.numeric.oct.Helix</string>
+            <string>constant.numeric.oct.Kairo</string>
             <key>match</key>
             <string>\b0o[0-7_]+\b</string>
           </dict>
           <dict>
             <key>name</key>
-            <string>constant.numeric.bin.Helix</string>
+            <string>constant.numeric.bin.Kairo</string>
             <key>match</key>
             <string>\b0b[01_]+\b</string>
           </dict>
           <dict>
             <key>name</key>
-            <string>constant.language.bool.Helix</string>
+            <string>constant.language.bool.Kairo</string>
             <key>match</key>
             <string>\b(true|false|null|nullptr)\b</string>
           </dict>
@@ -138,7 +138,7 @@
         <key>comment</key>
         <string>escapes: ASCII, byte, Unicode, quote, regex</string>
         <key>name</key>
-        <string>constant.character.escape.Helix</string>
+        <string>constant.character.escape.Kairo</string>
         <key>match</key>
         <string>(\\)(?:(?:(x[0-7][\da-fA-F])|(u(\{)[\da-fA-F]{4,6}(\}))|.))</string>
         <key>captures</key>
@@ -146,27 +146,27 @@
           <key>1</key>
           <dict>
             <key>name</key>
-            <string>constant.character.escape.backslash.Helix</string>
+            <string>constant.character.escape.backslash.Kairo</string>
           </dict>
           <key>2</key>
           <dict>
             <key>name</key>
-            <string>constant.character.escape.bit.Helix</string>
+            <string>constant.character.escape.bit.Kairo</string>
           </dict>
           <key>3</key>
           <dict>
             <key>name</key>
-            <string>constant.character.escape.unicode.Helix</string>
+            <string>constant.character.escape.unicode.Kairo</string>
           </dict>
           <key>4</key>
           <dict>
             <key>name</key>
-            <string>constant.character.escape.unicode.punctuation.Helix</string>
+            <string>constant.character.escape.unicode.punctuation.Kairo</string>
           </dict>
           <key>5</key>
           <dict>
             <key>name</key>
-            <string>constant.character.escape.unicode.punctuation.Helix</string>
+            <string>constant.character.escape.unicode.punctuation.Kairo</string>
           </dict>
         </dict>
       </dict>
@@ -178,7 +178,7 @@
             <key>comment</key>
             <string>function definition</string>
             <key>name</key>
-            <string>meta.function.definition.Helix</string>
+            <string>meta.function.definition.Kairo</string>
             <key>begin</key>
             <string>\b(fn)\s+(((?!self|super))?[A-Za-z0-9_]+)((\()|(&lt;))</string>
             <key>beginCaptures</key>
@@ -186,22 +186,22 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>keyword.other.fn.Helix</string>
+                <string>keyword.other.fn.Kairo</string>
               </dict>
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>entity.name.function.Helix</string>
+                <string>entity.name.function.Kairo</string>
               </dict>
               <key>4</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.brackets.round.Helix</string>
+                <string>punctuation.brackets.round.Kairo</string>
               </dict>
               <key>5</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.brackets.angle.Helix</string>
+                <string>punctuation.brackets.angle.Kairo</string>
               </dict>
             </dict>
             <key>end</key>
@@ -211,7 +211,7 @@
               <key>0</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.brackets.curly.Helix</string>
+                <string>punctuation.brackets.curly.Kairo</string>
               </dict>
             </dict>
             <key>patterns</key>
@@ -270,7 +270,7 @@
             <key>comment</key>
             <string>function/method calls, chaining, and generic function calls, including generics before the parenthesis</string>
             <key>name</key>
-            <string>meta.function.call.Helix</string>
+            <string>meta.function.call.Kairo</string>
             <key>begin</key>
             <string>(((?!self|super))?[A-Za-z0-9_]+)((&lt;([A-Za-z0-9_]+(::[A-Za-z0-9_]+)*(,\s*[A-Za-z0-9_]+(::[A-Za-z0-9_]+)*)*)&gt;)?)(\()</string>
             <key>beginCaptures</key>
@@ -278,22 +278,22 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>entity.name.function.Helix</string>
+                <string>entity.name.function.Kairo</string>
               </dict>
               <key>4</key>
               <dict>
                 <key>name</key>
-                <string>storage.type.generic.Helix</string>
+                <string>storage.type.generic.Kairo</string>
               </dict>
               <key>5</key>
               <dict>
                 <key>name</key>
-                <string>entity.name.type.Helix</string>
+                <string>entity.name.type.Kairo</string>
               </dict>
               <key>9</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.brackets.round.Helix</string>
+                <string>punctuation.brackets.round.Kairo</string>
               </dict>
             </dict>
             <key>end</key>
@@ -303,7 +303,7 @@
               <key>0</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.brackets.round.Helix</string>
+                <string>punctuation.brackets.round.Kairo</string>
               </dict>
             </dict>
             <key>patterns</key>
@@ -376,7 +376,7 @@
             <key>comment</key>
             <string>Control flow keywords</string>
             <key>name</key>
-            <string>keyword.control.Helix</string>
+            <string>keyword.control.Kairo</string>
             <key>match</key>
             <string>\b(break|case|continue|default|else|for|if|match|switch|unless|in|while)\b</string>
           </dict>
@@ -384,7 +384,7 @@
             <key>comment</key>
             <string>Function and method keywords</string>
             <key>name</key>
-            <string>keyword.function.Helix</string>
+            <string>keyword.function.Kairo</string>
             <key>match</key>
             <string>\b(async|define|fn|inline|macro|op|return|yield)\b</string>
           </dict>
@@ -392,7 +392,7 @@
             <key>comment</key>
             <string>Class and struct keywords</string>
             <key>name</key>
-            <string>keyword.class.Helix</string>
+            <string>keyword.class.Kairo</string>
             <key>match</key>
             <string>\b(class|enum|struct|type|union)\b</string>
           </dict>
@@ -400,7 +400,7 @@
             <key>comment</key>
             <string>Inheritance and polymorphism keywords</string>
             <key>name</key>
-            <string>keyword.inheritance.Helix</string>
+            <string>keyword.inheritance.Kairo</string>
             <key>match</key>
             <string>\b(abstract|derives|interface|requires|has)\b</string>
           </dict>
@@ -408,7 +408,7 @@
             <key>comment</key>
             <string>Error handling keywords</string>
             <key>name</key>
-            <string>keyword.error.Helix</string>
+            <string>keyword.error.Kairo</string>
             <key>match</key>
             <string>\b(catch|finally|panic|try|test)\b</string>
           </dict>
@@ -416,7 +416,7 @@
             <key>comment</key>
             <string>Variable declaration keywords</string>
             <key>name</key>
-            <string>keyword.declaration.Helix</string>
+            <string>keyword.declaration.Kairo</string>
             <key>match</key>
             <string>\b(eval|let|static|const)\b</string>
           </dict>
@@ -424,7 +424,7 @@
             <key>comment</key>
             <string>Access specifiers</string>
             <key>name</key>
-            <string>keyword.access.Helix</string>
+            <string>keyword.access.Kairo</string>
             <key>match</key>
             <string>\b(module|priv|pub|prot)\b</string>
           </dict>
@@ -432,7 +432,7 @@
             <key>comment</key>
             <string>Module importing keywords</string>
             <key>name</key>
-            <string>keyword.import.Helix</string>
+            <string>keyword.import.Kairo</string>
             <key>match</key>
             <string>\b(as|ffi|import)\b</string>
           </dict>
@@ -440,7 +440,7 @@
             <key>comment</key>
             <string>Concurrency keywords</string>
             <key>name</key>
-            <string>keyword.concurrency.Helix</string>
+            <string>keyword.concurrency.Kairo</string>
             <key>match</key>
             <string>\b(atomic|await|spawn|thread)\b</string>
           </dict>
@@ -448,7 +448,7 @@
             <key>comment</key>
             <string>Other keywords</string>
             <key>name</key>
-            <string>keyword.other.Helix</string>
+            <string>keyword.other.Kairo</string>
             <key>match</key>
             <string>\b(delete|unsafe)\b</string>
           </dict>
@@ -456,7 +456,7 @@
             <key>comment</key>
             <string>Primitive Type keywords</string>
             <key>name</key>
-            <string>keyword.primitive.Helix</string>
+            <string>keyword.primitive.Kairo</string>
             <key>match</key>
             <string>\b(f32|f64|i128|i16|i32|i64|i8|isize|u128|u16|u32|u64|u8|usize|char|bool|void)\b</string>
           </dict>
@@ -464,7 +464,7 @@
             <key>comment</key>
             <string>Operators</string>
             <key>name</key>
-            <string>keyword.operator.Helix</string>
+            <string>keyword.operator.Kairo</string>
             <key>match</key>
             <string>\b(\+|\+\+|\+=|\+-|\-|\-\-|\-=|\*|\*=|\/|\/=|%|%=|&|&=|&&|&&=|@|@=|\^|\^=|^^|^^=|~|~&|~&=|~\||~\|=|\||\|=|\|\||\|\|=|!|!=|!&|!&=|!\||!\|=|&lt;&lt;|&lt;&lt;=|&gt;&gt;|&gt;&gt;=|==|===|&gt;|&gt;=|&lt;|&lt;=|\.\.|\.\.=|::|-&gt;|=|\*\*|\*\*=)\b</string>
           </dict>
@@ -484,7 +484,7 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>entity.name.type.numeric.Helix</string>
+                <string>entity.name.type.numeric.Kairo</string>
               </dict>
             </dict>
           </dict>
@@ -494,7 +494,7 @@
             <key>match</key>
             <string>\b(string|list|map|set|tuple)\b</string>
             <key>name</key>
-            <string>entity.name.type.complex.Helix</string>
+            <string>entity.name.type.complex.Kairo</string>
           </dict>
           <dict>
             <key>comment</key>
@@ -506,12 +506,12 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>keyword.declaration.type.Helix</string>
+                <string>keyword.declaration.type.Kairo</string>
               </dict>
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>entity.name.type.user-defined.Helix</string>
+                <string>entity.name.type.user-defined.Kairo</string>
               </dict>
             </dict>
           </dict>
@@ -521,7 +521,7 @@
             <key>match</key>
             <string>\b([A-Z][A-Za-z0-9_]*)\b</string>
             <key>name</key>
-            <string>entity.name.type.parameter.Helix</string>
+            <string>entity.name.type.parameter.Kairo</string>
           </dict>
         </array>
       </dict>
@@ -533,7 +533,7 @@
             <key>comment</key>
             <string>generic type parameters</string>
             <key>name</key>
-            <string>storage.type.generic.Helix</string>
+            <string>storage.type.generic.Kairo</string>
             <key>begin</key>
             <string>&lt;</string>
             <key>beginCaptures</key>
@@ -541,7 +541,7 @@
               <key>0</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.generic.begin.Helix</string>
+                <string>punctuation.definition.generic.begin.Kairo</string>
               </dict>
             </dict>
             <key>end</key>
@@ -551,7 +551,7 @@
               <key>0</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.generic.end.Helix</string>
+                <string>punctuation.definition.generic.end.Kairo</string>
               </dict>
             </dict>
             <key>patterns</key>
@@ -576,7 +576,7 @@
             <key>comment</key>
             <string>Standard for loop</string>
             <key>name</key>
-            <string>meta.loop.for.Helix</string>
+            <string>meta.loop.for.Kairo</string>
             <key>begin</key>
             <string>\b(for)\s+[a-zA-Z_][a-zA-Z0-9_]*\s*;</string>
             <key>beginCaptures</key>
@@ -584,12 +584,12 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>keyword.control.loop.for.Helix</string>
+                <string>keyword.control.loop.for.Kairo</string>
               </dict>
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>storage.type.variable.Helix</string>
+                <string>storage.type.variable.Kairo</string>
               </dict>
             </dict>
             <key>end</key>
@@ -599,7 +599,7 @@
               <key>0</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.parenthesis.Helix</string>
+                <string>punctuation.definition.parenthesis.Kairo</string>
               </dict>
             </dict>
             <key>patterns</key>
@@ -616,7 +616,7 @@
             <key>comment</key>
             <string>Define invocation with optional parameters</string>
             <key>name</key>
-            <string>meta.define.invocation.Helix</string>
+            <string>meta.define.invocation.Kairo</string>
             <key>match</key>
             <string>\s?([a-z_][A-Za-z0-9_]+!)</string>
             <key>captures</key>
@@ -624,7 +624,7 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>entity.name.function.define.Helix</string>
+                <string>entity.name.function.define.Kairo</string>
               </dict>
             </dict>
           </dict>
@@ -632,7 +632,7 @@
             <key>comment</key>
             <string>Define macro with optional parameter list and complex body</string>
             <key>name</key>
-            <string>meta.define.macro.Helix</string>
+            <string>meta.define.macro.Kairo</string>
             <key>begin</key>
             <string>\b(define)\s+([a-z0-9_]+[A-Za-z0-9_]*!)(\s*\()?</string>
             <key>end</key>
@@ -642,17 +642,17 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>keyword.control.define.Helix</string>
+                <string>keyword.control.define.Kairo</string>
               </dict>
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>entity.name.function.define.Helix</string>
+                <string>entity.name.function.define.Kairo</string>
               </dict>
               <key>3</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.parameters.begin.Helix</string>
+                <string>punctuation.definition.parameters.begin.Kairo</string>
               </dict>
             </dict>
             <key>endCaptures</key>
@@ -660,12 +660,12 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.parameters.end.Helix</string>
+                <string>punctuation.definition.parameters.end.Kairo</string>
               </dict>
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.body.begin.Helix</string>
+                <string>punctuation.definition.body.begin.Kairo</string>
               </dict>
             </dict>
           </dict>
@@ -673,7 +673,7 @@
             <key>comment</key>
             <string>Proc macro</string>
             <key>name</key>
-            <string>meta.procedure.macro.Helix</string>
+            <string>meta.procedure.macro.Kairo</string>
             <key>begin</key>
             <string>\b(macro)\s+([a-z0-9_]+[A-Za-z0-9_]*)(\()</string>
             <key>end</key>
@@ -683,17 +683,17 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>keyword.control.macro.Helix</string>
+                <string>keyword.control.macro.Kairo</string>
               </dict>
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>entity.name.function.macro.Helix</string>
+                <string>entity.name.function.macro.Kairo</string>
               </dict>
               <key>3</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.parameters.begin.Helix</string>
+                <string>punctuation.definition.parameters.begin.Kairo</string>
               </dict>
             </dict>
             <key>endCaptures</key>
@@ -701,17 +701,17 @@
               <key>0</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.parameters.end.Helix</string>
+                <string>punctuation.definition.parameters.end.Kairo</string>
               </dict>
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>entity.name.type.return.Helix</string>
+                <string>entity.name.type.return.Kairo</string>
               </dict>
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.body.begin.Helix</string>
+                <string>punctuation.definition.body.begin.Kairo</string>
               </dict>
             </dict>
           </dict>
@@ -725,7 +725,7 @@
             <key>comment</key>
             <string>namespace (non-type, non-function path segment)</string>
             <key>name</key>
-            <string>entity.other.namespace.Helix</string>
+            <string>entity.other.namespace.Kairo</string>
             <key>match</key>
             <string>(?&lt;![A-Za-z0-9_])([A-Za-z0-9_]+)(::)</string>
             <key>captures</key>
@@ -733,12 +733,12 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>entity.name.namespace.Helix</string>
+                <string>entity.name.namespace.Kairo</string>
               </dict>
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>keyword.operator.namespace.Helix</string>
+                <string>keyword.operator.namespace.Kairo</string>
               </dict>
             </dict>
           </dict>
@@ -750,37 +750,37 @@
         <array>
           <dict>
             <key>name</key>
-            <string>punctuation.comma.Helix</string>
+            <string>punctuation.comma.Kairo</string>
             <key>match</key>
             <string>,</string>
           </dict>
           <dict>
             <key>name</key>
-            <string>punctuation.brackets.curly.Helix</string>
+            <string>punctuation.brackets.curly.Kairo</string>
             <key>match</key>
             <string>[{}]</string>
           </dict>
           <dict>
             <key>name</key>
-            <string>punctuation.brackets.round.Helix</string>
+            <string>punctuation.brackets.round.Kairo</string>
             <key>match</key>
             <string>[()]</string>
           </dict>
           <dict>
             <key>name</key>
-            <string>punctuation.semi.Helix</string>
+            <string>punctuation.semi.Kairo</string>
             <key>match</key>
             <string>;</string>
           </dict>
           <dict>
             <key>name</key>
-            <string>punctuation.brackets.square.Helix</string>
+            <string>punctuation.brackets.square.Kairo</string>
             <key>match</key>
             <string>[\[\]]</string>
           </dict>
           <dict>
             <key>name</key>
-            <string>punctuation.brackets.angle.Helix</string>
+            <string>punctuation.brackets.angle.Kairo</string>
             <key>match</key>
             <string>(?&lt;!=)[&lt;&gt;]</string>
           </dict>
@@ -794,7 +794,7 @@
             <key>comment</key>
             <string>double-quoted strings and byte strings</string>
             <key>name</key>
-            <string>string.quoted.double.Helix</string>
+            <string>string.quoted.double.Kairo</string>
             <key>begin</key>
             <string>(b|r|f|u|rf|br|uf)?(")</string>
             <key>beginCaptures</key>
@@ -802,12 +802,12 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>string.quoted.byte.raw.Helix</string>
+                <string>string.quoted.byte.raw.Kairo</string>
               </dict>
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.string.Helix</string>
+                <string>punctuation.definition.string.Kairo</string>
               </dict>
             </dict>
             <key>end</key>
@@ -817,7 +817,7 @@
               <key>0</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.string.Helix</string>
+                <string>punctuation.definition.string.Kairo</string>
               </dict>
             </dict>
             <key>patterns</key>
@@ -836,7 +836,7 @@
             <key>comment</key>
             <string>characters and bytes</string>
             <key>name</key>
-            <string>string.quoted.single.char.Helix</string>
+            <string>string.quoted.single.char.Kairo</string>
             <key>begin</key>
             <string>(b|r|f|u|rf|br|uf)?(')</string>
             <key>beginCaptures</key>
@@ -844,12 +844,12 @@
               <key>1</key>
               <dict>
                 <key>name</key>
-                <string>string.quoted.byte.raw.Helix</string>
+                <string>string.quoted.byte.raw.Kairo</string>
               </dict>
               <key>2</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.char.Helix</string>
+                <string>punctuation.definition.char.Kairo</string>
               </dict>
             </dict>
             <key>end</key>
@@ -859,7 +859,7 @@
               <key>0</key>
               <dict>
                 <key>name</key>
-                <string>punctuation.definition.char.Helix</string>
+                <string>punctuation.definition.char.Kairo</string>
               </dict>
             </dict>
             <key>patterns</key>
@@ -880,7 +880,7 @@
             <key>comment</key>
             <string>self</string>
             <key>name</key>
-            <string>variable.language.self.Helix</string>
+            <string>variable.language.self.Kairo</string>
             <key>match</key>
             <string>\bself\b</string>
           </dict>
@@ -888,7 +888,7 @@
             <key>comment</key>
             <string>super</string>
             <key>name</key>
-            <string>variable.language.super.Helix</string>
+            <string>variable.language.super.Kairo</string>
             <key>match</key>
             <string>\bsuper\b</string>
           </dict>
@@ -900,7 +900,7 @@
         <array>
           <dict>
             <key>name</key>
-            <string>variable.other.Helix</string>
+            <string>variable.other.Kairo</string>
             <key>match</key>
             <string>\b[a-zA-Z_][a-zA-Z0-9_]*\b</string>
           </dict>

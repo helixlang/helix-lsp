@@ -1,3 +1,3 @@
 import os
 
-print(f"helix_path = {os.getenv("HELIX_PATH")}")
+print(f"kairo_path = {os.getenv("KAIRO_PATH")}")

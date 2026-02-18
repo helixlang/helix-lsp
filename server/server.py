@@ -53,7 +53,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s",
 )
 
-logger = logging.getLogger("HelixLSP")
+logger = logging.getLogger("KairoLSP")
 logger.propagate = True
 
 def log_unhandled_exception(exc_type, exc_value, exc_traceback):
@@ -207,37 +207,37 @@ class CompileCommands:
             logger.debug("No compile command found for %s", for_file)
 
 
-def extract_cpp_from_ir(helix_path: str, compile_db: 'CompileCommands', file: str, line_range: str | None = None) -> str:
+def extract_cpp_from_ir(kairo_path: str, compile_db: 'CompileCommands', file: str, line_range: str | None = None) -> str:
     """
-    Run the Helix compiler to emit IR for the given file, trim boilerplate,
+    Run the Kairo compiler to emit IR for the given file, trim boilerplate,
     extract the mapped C++ for the specified line range, and return formatted output.
     Respects compile_commands.json from the running LSP server.
     """
-    logger = logging.getLogger("HelixLSP")
+    logger = logging.getLogger("KairoLSP")
 
-    if not os.path.exists(helix_path):
-        raise FileNotFoundError(f"Helix binary not found: {helix_path}")
+    if not os.path.exists(kairo_path):
+        raise FileNotFoundError(f"Kairo binary not found: {kairo_path}")
 
     compile_db.load(file)
-    cmd = [helix_path, file, "--emit-ir", "--verbose"]
+    cmd = [kairo_path, file, "--emit-ir", "--verbose"]
 
     if compile_db.commands:
         cmd.extend(compile_db.commands)
 
-    logger.info(f"Running Helix IR emission for {file}")
+    logger.info(f"Running Kairo IR emission for {file}")
     proc = subprocess.run(cmd, capture_output=True, text=True)
     output = proc.stdout
 
     if not output.strip():
-        raise RuntimeError("No output received from Helix compiler")
+        raise RuntimeError("No output received from Kairo compiler")
 
     # --- Trim preamble ---
-    hdr_pat = re.compile(r"#define __HELIX_CORE_CXX__.*?#endif", re.DOTALL)
+    hdr_pat = re.compile(r"#define __KAIRO_CORE_CXX__.*?#endif", re.DOTALL)
     m = hdr_pat.search(output)
     if m:
         output = output[m.end():]
 
-    # Trim everything after the last #endif (Helix emits multiple files)
+    # Trim everything after the last #endif (Kairo emits multiple files)
     last_endif = output.rfind("#endif")
     if last_endif != -1:
         output = output[:last_endif + len("#endif")]
@@ -342,10 +342,10 @@ def extract_cpp_from_ir(helix_path: str, compile_db: 'CompileCommands', file: st
             os.remove(tmp_path)
 
 # ---------------------------------------------------------------------- #
-# HelixLanguageServer
+# KairoLanguageServer
 # ---------------------------------------------------------------------- #
-class HelixLanguageServer(LanguageServer):
-    """Custom Language Server for Helix."""
+class KairoLanguageServer(LanguageServer):
+    """Custom Language Server for Kairo."""
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
@@ -354,7 +354,7 @@ class HelixLanguageServer(LanguageServer):
         self.parse_interval = None
         self.analyze_failed = False
         self.basic_parse_failed = False
-        self.helix_path = sys.argv[1] if len(sys.argv) > 1 else None
+        self.kairo_path = sys.argv[1] if len(sys.argv) > 1 else None
         self.compile_db = None
 
     @property
@@ -394,11 +394,11 @@ class HelixLanguageServer(LanguageServer):
             decoded_path = unquote(uri_path)
             file_path = os.path.abspath(decoded_path.lstrip("/"))
 
-            if not self.helix_path or not os.path.exists(self.helix_path):
-                logger.critical("Helix binary not found: %s", self.helix_path)
-                raise FileNotFoundError(f"Helix binary does not exist: {self.helix_path}")
+            if not self.kairo_path or not os.path.exists(self.kairo_path):
+                logger.critical("Kairo binary not found: %s", self.kairo_path)
+                raise FileNotFoundError(f"Kairo binary does not exist: {self.kairo_path}")
 
-            command = [self.helix_path, file_path, "--lsp-mode"]
+            command = [self.kairo_path, file_path, "--lsp-mode"]
 
             # Use persistent cached compile_commands
             self.compile_db.load(file_path)
@@ -414,10 +414,10 @@ class HelixLanguageServer(LanguageServer):
             except subprocess.TimeoutExpired:
                 process.kill()
                 stdout, stderr = process.communicate()
-                logger.error("Helix compiler timed out after 10 seconds: %s", command)
+                logger.error("Kairo compiler timed out after 10 seconds: %s", command)
 
             if stderr:
-                logger.error("Helix stderr: %s", stderr.decode("utf-8"))
+                logger.error("Kairo stderr: %s", stderr.decode("utf-8"))
 
             if process.returncode == 0:
                 self.diagnostics[document.uri] = (document.version, [])
@@ -436,7 +436,7 @@ class HelixLanguageServer(LanguageServer):
                 self.diagnostics[document.uri] = (document.version, diagnostics)
             
             except json.JSONDecodeError as e:
-                logger.error("Failed to parse JSON from Helix output: %s\nOutput: %s", e, result)
+                logger.error("Failed to parse JSON from Kairo output: %s\nOutput: %s", e, result)
                 self.diagnostics[document.uri] = (document.version, diagnostics)
                 return False
 
@@ -487,12 +487,12 @@ class HelixLanguageServer(LanguageServer):
 # ---------------------------------------------------------------------- #
 # LSP Feature Registration
 # ---------------------------------------------------------------------- #
-SERVER = HelixLanguageServer("HelixLSP", "1.0")
+SERVER = KairoLanguageServer("KairoLSP", "1.0")
 
 
 @SERVER.feature(INITIALIZED)
-def on_initialized(server: HelixLanguageServer, params: Any) -> None:
-    logger.info("Helix Language Server initialized.")
+def on_initialized(server: KairoLanguageServer, params: Any) -> None:
+    logger.info("Kairo Language Server initialized.")
     try:
         server.compile_db = CompileCommands(server)
         logger.info("CompileCommands initialized successfully.")
@@ -501,20 +501,20 @@ def on_initialized(server: HelixLanguageServer, params: Any) -> None:
 
 
 @SERVER.feature(TEXT_DOCUMENT_DID_OPEN)
-def did_open(server: HelixLanguageServer, params: DidOpenTextDocumentParams) -> None:
+def did_open(server: KairoLanguageServer, params: DidOpenTextDocumentParams) -> None:
     doc = server.workspace.get_text_document(params.text_document.uri)
     server.queue_parse(doc)
     send_diagnostics(server, params.text_document.uri)
 
 
 @SERVER.feature(TEXT_DOCUMENT_DID_CLOSE)
-def did_close(server: HelixLanguageServer, params: DidCloseTextDocumentParams) -> None:
+def did_close(server: KairoLanguageServer, params: DidCloseTextDocumentParams) -> None:
     server.diagnostics.pop(params.text_document.uri, None)
     send_diagnostics(server, params.text_document.uri)
 
 
 @SERVER.feature(TEXT_DOCUMENT_DID_SAVE)
-def did_save(server: HelixLanguageServer, params: DidChangeTextDocumentParams) -> None:
+def did_save(server: KairoLanguageServer, params: DidChangeTextDocumentParams) -> None:
     """Handles document saving."""
     uri = getattr(params.text_document, "uri", None)
     if not uri:
@@ -524,24 +524,24 @@ def did_save(server: HelixLanguageServer, params: DidChangeTextDocumentParams) -
     server.queue_parse(doc)
     send_diagnostics(server, uri)
 
-@SERVER.command("helix.showIR")
-def show_ir(server: HelixLanguageServer, params: ExecuteCommandParams):
+@SERVER.command("kairo.showIR")
+def show_ir(server: KairoLanguageServer, params: ExecuteCommandParams):
     """Handles actual IR generation when command is invoked."""
-    logger.info(f"Received helix.showIR for {params}")
+    logger.info(f"Received kairo.showIR for {params}")
     try:
         uri, start_line, end_line = params.arguments
         file = Path(url2pathname(unquote(urlparse(uri).path))).absolute()
         line_range = f"{start_line}:{end_line}"
 
         result = extract_cpp_from_ir(
-            server.helix_path, server.compile_db, str(file), line_range
+            server.kairo_path, server.compile_db, str(file), line_range
         )
         return result
     except Exception as e:
         logger.exception("Show IR failed")
         return f"Error: {e}"
 
-def send_diagnostics(server: HelixLanguageServer, uri: str) -> None:
+def send_diagnostics(server: KairoLanguageServer, uri: str) -> None:
     diag = server.diagnostics.get(uri)
     if not diag:
         return
@@ -571,7 +571,7 @@ class LogClearerThread(threading.Thread):
 # Entrypoint
 # ---------------------------------------------------------------------- #
 if __name__ == "__main__":
-    logger.info("Starting Helix Language Server")
+    logger.info("Starting Kairo Language Server")
     try:
         LogClearerThread(LOG_CLEAR_INTERVAL).start()
         SERVER.start_io()

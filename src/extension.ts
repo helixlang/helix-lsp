@@ -1,7 +1,7 @@
-import {ChildProcess, spawn} from 'child_process';
+import { ChildProcess, spawn } from 'child_process';
 import * as path from 'path';
 import * as vscode from 'vscode';
-import {LanguageClient, LanguageClientOptions, StreamInfo} from 'vscode-languageclient/node';
+import { LanguageClient, LanguageClientOptions, StreamInfo } from 'vscode-languageclient/node';
 
 let client: LanguageClient|undefined;
 
@@ -12,11 +12,11 @@ let client: LanguageClient|undefined;
 export async function activate(context: vscode.ExtensionContext):
     Promise<void> {
   try {
-    const helixPath = await getOrPromptHelixCompilerPath();
+    const kairoPath = await getOrPromptKairoCompilerPath();
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('helix.restartLSP', async () => {
-          await restartLanguageServer(context, helixPath);
+        vscode.commands.registerCommand('kairo.restartLSP', async () => {
+          await restartLanguageServer(context, kairoPath);
         }));
 
     const venvPath = await createVirtualEnv();
@@ -26,11 +26,11 @@ export async function activate(context: vscode.ExtensionContext):
       return;
     }
 
-    const serverOptions = createServerOptions(helixPath, venvPath);
+    const serverOptions = createServerOptions(kairoPath, venvPath);
     const clientOptions = createClientOptions();
 
     client = new LanguageClient(
-        'HelixVscodeLSP', 'Helix Language Support', serverOptions,
+        'KairoVscodeLSP', 'Kairo Language Support', serverOptions,
         clientOptions);
 
     client.start();
@@ -38,7 +38,7 @@ export async function activate(context: vscode.ExtensionContext):
     context.subscriptions.push(client);
   } catch (error) {
     vscode.window.showErrorMessage(
-        `Failed to activate Helix Language Server Client: ${error}`);
+        `Failed to activate Kairo Language Server Client: ${error}`);
     console.error(`[ERROR] Activation error: ${error}`);
   }
 }
@@ -47,8 +47,8 @@ export async function activate(context: vscode.ExtensionContext):
  * find the installed python path
  */
 async function findPython(): Promise<string> {
-  /// get the path defined at helix.pythonPath
-  const config = vscode.workspace.getConfiguration('helix');
+  /// get the path defined at kairo.pythonPath
+  const config = vscode.workspace.getConfiguration('kairo');
   let pythonPath: string|undefined = config.get<string>('pythonPath');
 
   if (!pythonPath) {
@@ -70,20 +70,20 @@ async function findPython(): Promise<string> {
 }
 
 /**
- * Create a virtual environment for the Helix Language Server. and return the
+ * Create a virtual environment for the Kairo Language Server. and return the
  * python executable path
  * @param pythonPath The python path.
- * @param ServerDir The Helix compiler root dir, the bin is at
- *     `ServerDir/bin/helix`
+ * @param ServerDir The Kairo compiler root dir, the bin is at
+ *     `ServerDir/bin/kairo`
  * @param envName The name of the virtual environment.
  */
-async function createVirtualEnv(envName = 'helix-lsp-venv'): Promise<string> {
-  // server path is at helix.serverPath
-  const config = vscode.workspace.getConfiguration('helix');
+async function createVirtualEnv(envName = 'kairo-lsp-venv'): Promise<string> {
+  // server path is at kairo.serverPath
+  const config = vscode.workspace.getConfiguration('kairo');
   const serverPath = config.get<string>('serverPath');
   if (!serverPath) {
     vscode.window.showErrorMessage(
-        'Helix server path not set. Extension will be deactivated.');
+        'Kairo server path not set. Extension will be deactivated.');
     return '';
   }
 
@@ -205,23 +205,23 @@ async function installRequirements(
 }
 
 /**
- * Restart the Helix Language Server.
+ * Restart the Kairo Language Server.
  * @param context The extension context.
- * @param helixPath The Helix compiler path.
+ * @param kairoPath The Kairo compiler path.
  */
 async function restartLanguageServer(
-    context: vscode.ExtensionContext, helixPath: string): Promise<void> {
+    context: vscode.ExtensionContext, kairoPath: string): Promise<void> {
   try {
     if (client) {
-      vscode.window.showInformationMessage('Stopping Helix Language Server...');
+      vscode.window.showInformationMessage('Stopping Kairo Language Server...');
       await client.stop();
     }
 
-    const helixPath =
-        await getOrPromptHelixCompilerPath();  // points to helix/bin/helix
-    if (!helixPath) {
+    const kairoPath =
+        await getOrPromptKairoCompilerPath();  // points to kairo/bin/kairo
+    if (!kairoPath) {
       vscode.window.showErrorMessage(
-          'Helix compiler path not set. Extension will be deactivated.');
+          'Kairo compiler path not set. Extension will be deactivated.');
       return;
     }
 
@@ -232,20 +232,20 @@ async function restartLanguageServer(
       return;
     }
 
-    const serverOptions = createServerOptions(helixPath, venvPath);
+    const serverOptions = createServerOptions(kairoPath, venvPath);
     const clientOptions = createClientOptions();
 
     client = new LanguageClient(
-        'HelixVscodeLSP', 'Helix Language Support', serverOptions,
+        'KairoVscodeLSP', 'Kairo Language Support', serverOptions,
         clientOptions);
 
-    vscode.window.showInformationMessage('Restarting Helix Language Server...');
+    vscode.window.showInformationMessage('Restarting Kairo Language Server...');
     client.start();
 
     context.subscriptions.push(client);
   } catch (error) {
     vscode.window.showErrorMessage(
-        `Failed to restart Helix Language Server: ${error}`);
+        `Failed to restart Kairo Language Server: ${error}`);
     console.error(`[ERROR] Restart error: ${error}`);
   }
 }
@@ -258,55 +258,55 @@ export function deactivate(): Thenable<void>|undefined {
     return undefined;
   }
   vscode.window.showInformationMessage(
-      'Deactivating Helix Language Server Client...');
+      'Deactivating Kairo Language Server Client...');
   return client.stop();
 }
 
 /**
- * Get the Helix compiler path from VS Code settings or prompt the user if not
+ * Get the Kairo compiler path from VS Code settings or prompt the user if not
  * set.
- * @returns The Helix compiler path or `undefined` if the user cancels the
+ * @returns The Kairo compiler path or `undefined` if the user cancels the
  *     input.
  */
-async function getOrPromptHelixCompilerPath(): Promise<string> {
-  const config = vscode.workspace.getConfiguration('helix');
-  let helixPath: string|undefined = config.get<string>('path');
-  let helixPathValid = false;
+async function getOrPromptKairoCompilerPath(): Promise<string> {
+  const config = vscode.workspace.getConfiguration('kairo');
+  let kairoPath: string|undefined = config.get<string>('path');
+  let kairoPathValid = false;
 
-  if (helixPath) {
+  if (kairoPath) {
     try {
-      await vscode.workspace.fs.stat(vscode.Uri.file(helixPath));
-      helixPathValid = true;
+      await vscode.workspace.fs.stat(vscode.Uri.file(kairoPath));
+      kairoPathValid = true;
     } catch (error) {
-      console.error(`[ERROR] Helix compiler path error: ${error}`);
+      console.error(`[ERROR] Kairo compiler path error: ${error}`);
     }
   }
 
-  if (!helixPathValid) {
+  if (!kairoPathValid) {
     vscode.window.showErrorMessage(
-        `Helix compiler path does not exist or is not executable: ${
-            helixPath}`);
+        `Kairo compiler path does not exist or is not executable: ${
+            kairoPath}`);
 
-    while (!helixPathValid) {
-      helixPath = await vscode.window.showInputBox({
-        prompt: 'Enter the full path to the Helix compiler (helix binary)',
-        placeHolder: '/path/to/helix',
+    while (!kairoPathValid) {
+      kairoPath = await vscode.window.showInputBox({
+        prompt: 'Enter the full path to the Kairo compiler (kairo binary)',
+        placeHolder: '/path/to/kairo',
       });
 
-      if (helixPath) {
+      if (kairoPath) {
         try {
-          await vscode.workspace.fs.stat(vscode.Uri.file(helixPath));
-          helixPathValid = true;
+          await vscode.workspace.fs.stat(vscode.Uri.file(kairoPath));
+          kairoPathValid = true;
         } catch (error) {
-          console.error(`[ERROR] Helix compiler path error: ${error}`);
-          helixPath = '';
+          console.error(`[ERROR] Kairo compiler path error: ${error}`);
+          kairoPath = '';
         }
 
         await config.update(
-            'path', helixPath, vscode.ConfigurationTarget.Global);
+            'path', kairoPath, vscode.ConfigurationTarget.Global);
 
         vscode.window.showInformationMessage(
-            `Helix compiler path set to: ${helixPath}`);
+            `Kairo compiler path set to: ${kairoPath}`);
       }
 
       // sleep for 4 seconds
@@ -314,32 +314,32 @@ async function getOrPromptHelixCompilerPath(): Promise<string> {
     }
   }
 
-  return helixPath || '';
+  return kairoPath || '';
 }
 
 /**
  * Create server options for the language client.
  * @returns A promise that resolves with the StreamInfo object.
  */
-function createServerOptions(helixPath: string, venvPath: string): () =>
+function createServerOptions(kairoPath: string, venvPath: string): () =>
     Promise<StreamInfo> {
   return (): Promise<StreamInfo> => {
     return new Promise((resolve, reject) => {
-      // path is at helix.serverPath
-      const config = vscode.workspace.getConfiguration('helix');
+      // path is at kairo.serverPath
+      const config = vscode.workspace.getConfiguration('kairo');
       const serverPath = config.get<string>('serverPath');
 
       if (!serverPath) {
         vscode.window.showErrorMessage(
-            'Helix server path not set. Extension will be deactivated.');
+            'Kairo server path not set. Extension will be deactivated.');
         return;
       }
 
       console.log(`[INFO] Server script path: ${serverPath}`);
-      console.log(`[INFO] Helix binary path: ${helixPath}`);
+      console.log(`[INFO] Kairo binary path: ${kairoPath}`);
 
       const serverProcess: ChildProcess = spawn(
-          venvPath, [serverPath, helixPath], {stdio: ['pipe', 'pipe', 'pipe']});
+          venvPath, [serverPath, kairoPath], {stdio: ['pipe', 'pipe', 'pipe']});
 
       serverProcess.stdout?.on(
           'data',
@@ -377,10 +377,10 @@ function createServerOptions(helixPath: string, venvPath: string): () =>
  */
 function createClientOptions(): LanguageClientOptions {
   return {
-    documentSelector: [{scheme: 'file', language: 'helix'}],
+    documentSelector: [{scheme: 'file', language: 'kairo'}],
     synchronize: {
         // File events are not synchronized since only save events are needed
     },
-    outputChannel: vscode.window.createOutputChannel('Helix Language Server'),
+    outputChannel: vscode.window.createOutputChannel('Kairo Language Server'),
   };
 }

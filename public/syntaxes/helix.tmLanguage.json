@@ -1,7 +1,7 @@
 {
     "version": "0.2.2",
-    "scopeName": "source.helix",
-    "name": "helix",
+    "scopeName": "source.kairo",
+    "name": "kairo",
     "patterns": [
         {
             "include": "#block-comments"
@@ -100,10 +100,10 @@
                     ]
                 },
                 {
-                    "name": "comment.line.helix",
+                    "name": "comment.line.kairo",
                     "match": "//.*$",
                     "captures": {
-                        "0": { "name": "comment.line.helix" }
+                        "0": { "name": "comment.line.kairo" }
                     },
                     "patterns": [
                         {
@@ -118,7 +118,7 @@
             "patterns": [
                 {
                     "comment": "block comments",
-                    "name": "comment.block.helix",
+                    "name": "comment.block.kairo",
                     "begin": "/\\*",
                     "end": "\\*/"
                 }
@@ -127,46 +127,46 @@
         "constants": {
             "patterns": [
                 {
-                    "name": "constant.numeric.decimal.helix",
+                    "name": "constant.numeric.decimal.kairo",
                     "match": "\\b\\d[\\d_]*(\\.?)[\\d_]*(?:(E|e)([+-]?)([\\d_]+))?\\b"
                 },
                 {
-                    "name": "constant.numeric.hex.helix",
+                    "name": "constant.numeric.hex.kairo",
                     "match": "\\b0x[\\da-fA-F_]+\\b"
                 },
                 {
-                    "name": "constant.numeric.oct.helix",
+                    "name": "constant.numeric.oct.kairo",
                     "match": "\\b0o[0-7_]+\\b"
                 },
                 {
-                    "name": "constant.numeric.bin.helix",
+                    "name": "constant.numeric.bin.kairo",
                     "match": "\\b0b[01_]+\\b"
                 },
                 {
-                    "name": "constant.language.bool.helix",
+                    "name": "constant.language.bool.kairo",
                     "match": "\\b(true|false|null|nullptr)\\b"
                 }
             ]
         },
         "escapes": {
             "comment": "escapes: ASCII, byte, Unicode, quote, regex",
-            "name": "constant.character.escape.helix",
+            "name": "constant.character.escape.kairo",
             "match": "(\\\\)(?:(?:(x[0-7][\\da-fA-F])|(u(\\{)[\\da-fA-F]{4,6}(\\}))|.))",
             "captures": {
                 "1": {
-                    "name": "constant.character.escape.backslash.helix"
+                    "name": "constant.character.escape.backslash.kairo"
                 },
                 "2": {
-                    "name": "constant.character.escape.bit.helix"
+                    "name": "constant.character.escape.bit.kairo"
                 },
                 "3": {
-                    "name": "constant.character.escape.unicode.helix"
+                    "name": "constant.character.escape.unicode.kairo"
                 },
                 "4": {
-                    "name": "constant.character.escape.unicode.punctuation.helix"
+                    "name": "constant.character.escape.unicode.punctuation.kairo"
                 },
                 "5": {
-                    "name": "constant.character.escape.unicode.punctuation.helix"
+                    "name": "constant.character.escape.unicode.punctuation.kairo"
                 }
             }
         },
@@ -174,26 +174,26 @@
             "patterns": [
                 {
                     "comment": "function definition",
-                    "name": "meta.function.definition.helix",
+                    "name": "meta.function.definition.kairo",
                     "begin": "\\b(fn)\\s+(((?!self|super))?[A-Za-z0-9_]+)((\\()|(<))",
                     "beginCaptures": {
                         "1": {
-                            "name": "keyword.other.fn.helix"
+                            "name": "keyword.other.fn.kairo"
                         },
                         "2": {
-                            "name": "entity.name.function.helix"
+                            "name": "entity.name.function.kairo"
                         },
                         "4": {
-                            "name": "punctuation.brackets.round.helix"
+                            "name": "punctuation.brackets.round.kairo"
                         },
                         "5": {
-                            "name": "punctuation.brackets.angle.helix"
+                            "name": "punctuation.brackets.angle.kairo"
                         }
                     },
                     "end": "\\{|;",
                     "endCaptures": {
                         "0": {
-                            "name": "punctuation.brackets.curly.helix"
+                            "name": "punctuation.brackets.curly.kairo"
                         }
                     },
                     "patterns": [
@@ -237,26 +237,26 @@
                 },
                 {
                     "comment": "function/method calls, chaining, and generic function calls, including generics before the parenthesis",
-                    "name": "meta.function.call.helix",
+                    "name": "meta.function.call.kairo",
                     "begin": "(((?!self|super))?[A-Za-z0-9_]+)((<([A-Za-z0-9_]+(::[A-Za-z0-9_]+)*(,\\s*[A-Za-z0-9_]+(::[A-Za-z0-9_]+)*)*)>)?)(\\()",
                     "beginCaptures": {
                         "1": {
-                            "name": "entity.name.function.helix"
+                            "name": "entity.name.function.kairo"
                         },
                         "4": {
-                            "name": "storage.type.generic.helix"
+                            "name": "storage.type.generic.kairo"
                         },
                         "5": {
-                            "name": "entity.name.type.helix"
+                            "name": "entity.name.type.kairo"
                         },
                         "9": {
-                            "name": "punctuation.brackets.round.helix"
+                            "name": "punctuation.brackets.round.kairo"
                         }
                     },
                     "end": "\\)",
                     "endCaptures": {
                         "0": {
-                            "name": "punctuation.brackets.round.helix"
+                            "name": "punctuation.brackets.round.kairo"
                         }
                     },
                     "patterns": [
@@ -310,62 +310,62 @@
             "patterns": [
                 {
                     "comment": "Control flow keywords",
-                    "name": "keyword.control.helix",
+                    "name": "keyword.control.kairo",
                     "match": "\\b(break|case|continue|default|else|for|if|match|switch|unless|in|while)\\b"
                 },
                 {
                     "comment": "Function and method keywords",
-                    "name": "keyword.function.helix",
+                    "name": "keyword.function.kairo",
                     "match": "\\b(override|virtual|fn|inline|macro|op|return|yield)\\b"
                 },
                 {
                     "comment": "Class and struct keywords",
-                    "name": "keyword.class.helix",
+                    "name": "keyword.class.kairo",
                     "match": "\\b(class|enum|struct|type)\\b"
                 },
                 {
                     "comment": "Inheritance and polymorphism keywords",
-                    "name": "keyword.inheritance.helix",
+                    "name": "keyword.inheritance.kairo",
                     "match": "\\b(extend|derives|where|interface|requires|impl)\\b"
                 },
                 {
                     "comment": "Error handling keywords",
-                    "name": "keyword.error.helix",
+                    "name": "keyword.error.kairo",
                     "match": "\\b(catch|finally|panic|try|test|assert)\\b"
                 },
                 {
                     "comment": "Variable declaration keywords",
-                    "name": "keyword.declaration.helix",
+                    "name": "keyword.declaration.kairo",
                     "match": "\\b(eval|var|static|const)\\b"
                 },
                 {
                     "comment": "Access specifiers",
-                    "name": "keyword.access.helix",
+                    "name": "keyword.access.kairo",
                     "match": "\\b(module|priv|pub|prot)\\b"
                 },
                 {
                     "comment": "Module importing keywords",
-                    "name": "keyword.import.helix",
+                    "name": "keyword.import.kairo",
                     "match": "\\b(ffi|import)\\b"
                 },
                 {
                     "comment": "Concurrency keywords",
-                    "name": "keyword.concurrency.helix",
+                    "name": "keyword.concurrency.kairo",
                     "match": "\\b(await|async|thread)\\b"
                 },
                 {
                     "comment": "Other keywords",
-                    "name": "keyword.other.helix",
+                    "name": "keyword.other.kairo",
                     "match": "\\b(sizeof|alignof|typeof|as|delete|unsafe)\\b"
                 },
                 {
                     "comment": "Primitive Type keywords",
-                    "name": "keyword.primitive.helix",
+                    "name": "keyword.primitive.kairo",
                     "match": "\\b(f32|f64|f80|i256|f128|i128|i16|i32|i64|i8|isize|u128|u256|u16|u32|u64|u8|usize|char|bool|void)\\b"
                 },
                 {
                     "comment": "Operators",
-                    "name": "keyword.operator.helix",
+                    "name": "keyword.operator.kairo",
                     "match": "\\b(\\+|\\+\\+|\\+=|\\+-|\\-|\\-\\-|\\-=|\\*|\\*=|\\/|\\/=|%|%=|&|&=|&&|&&=|@|@=|\\^|\\^=|^^|^^=|~|~&|~&=|~\\||~\\|=|\\||\\|=|\\|\\||\\|\\|=|!|!=|!&|!&=|!\\||!\\|=|<<|<<=|>>|>>=|==|===|>|>=|<|<=|\\.\\.|\\.\\.=|::|->|=|\\*\\*|\\*\\*=)\\b"
                 }
             ]
@@ -377,31 +377,31 @@
                     "match": "\\b(int|float|decimal)\\b",
                     "captures": {
                         "1": {
-                            "name": "entity.name.type.numeric.helix"
+                            "name": "entity.name.type.numeric.kairo"
                         }
                     }
                 },
                 {
                     "comment": "complex types",
                     "match": "\\b(string|list|map|set|tuple)\\b",
-                    "name": "entity.name.type.complex.helix"
+                    "name": "entity.name.type.complex.kairo"
                 },
                 {
                     "comment": "user-defined types, possibly with generics",
                     "match": "\\b(class|struct|enum|union|type)\\s+([A-Z][A-Za-z0-9_]*)\\b",
                     "captures": {
                         "1": {
-                            "name": "keyword.declaration.type.helix"
+                            "name": "keyword.declaration.type.kairo"
                         },
                         "2": {
-                            "name": "entity.name.type.user-defined.helix"
+                            "name": "entity.name.type.user-defined.kairo"
                         }
                     }
                 },
                 {
                     "comment": "type parameters",
                     "match": "\\b([A-Z][A-Za-z0-9_]*)\\b",
-                    "name": "entity.name.type.parameter.helix"
+                    "name": "entity.name.type.parameter.kairo"
                 }
             ]
         },
@@ -409,17 +409,17 @@
             "patterns": [
                 {
                     "comment": "generic type parameters",
-                    "name": "storage.type.generic.helix",
+                    "name": "storage.type.generic.kairo",
                     "begin": "<",
                     "beginCaptures": {
                         "0": {
-                            "name": "punctuation.definition.generic.begin.helix"
+                            "name": "punctuation.definition.generic.begin.kairo"
                         }
                     },
                     "end": ">",
                     "endCaptures": {
                         "0": {
-                            "name": "punctuation.definition.generic.end.helix"
+                            "name": "punctuation.definition.generic.end.kairo"
                         }
                     },
                     "patterns": [
@@ -437,20 +437,20 @@
             "patterns": [
                 {
                     "comment": "Standard for loop",
-                    "name": "meta.loop.for.helix",
+                    "name": "meta.loop.for.kairo",
                     "begin": "\\b(for)\\s+[a-zA-Z_][a-zA-Z0-9_]*\\s*;",
                     "beginCaptures": {
                         "1": {
-                            "name": "keyword.control.loop.for.helix"
+                            "name": "keyword.control.loop.for.kairo"
                         },
                         "2": {
-                            "name": "storage.type.variable.helix"
+                            "name": "storage.type.variable.kairo"
                         }
                     },
                     "end": "\\{",
                     "endCaptures": {
                         "0": {
-                            "name": "punctuation.definition.parenthesis.helix"
+                            "name": "punctuation.definition.parenthesis.kairo"
                         }
                     },
                     "patterns": []
@@ -461,64 +461,64 @@
             "patterns": [
                 {
                     "comment": "Define invocation with optional parameters",
-                    "name": "meta.define.invocation.helix",
+                    "name": "meta.define.invocation.kairo",
                     "match": "\\s?([a-z_][A-Za-z0-9_]+!)",
                     "captures": {
                         "1": {
-                            "name": "entity.name.function.define.helix"
+                            "name": "entity.name.function.define.kairo"
                         }
                     }
                 },
                 {
                     "comment": "Define macro with optional parameter list and complex body",
-                    "name": "meta.define.macro.helix",
+                    "name": "meta.define.macro.kairo",
                     "begin": "\\b(macro)\\s+([a-z0-9_]+[A-Za-z0-9_]*!)(\\s*\\()?",
                     "end": "\\)\\s*->\\s*([a-z0-9_]+)\\s*\\{",
                     "beginCaptures": {
                         "1": {
-                            "name": "keyword.control.define.helix"
+                            "name": "keyword.control.define.kairo"
                         },
                         "2": {
-                            "name": "entity.name.function.define.helix"
+                            "name": "entity.name.function.define.kairo"
                         },
                         "3": {
-                            "name": "punctuation.definition.parameters.begin.helix"
+                            "name": "punctuation.definition.parameters.begin.kairo"
                         }
                     },
                     "endCaptures": {
                         "1": {
-                            "name": "punctuation.definition.parameters.end.helix"
+                            "name": "punctuation.definition.parameters.end.kairo"
                         },
                         "2": {
-                            "name": "punctuation.definition.body.begin.helix"
+                            "name": "punctuation.definition.body.begin.kairo"
                         }
                     }
                 },
                 {
                     "comment": "Proc macro",
-                    "name": "meta.procedure.macro.helix",
+                    "name": "meta.procedure.macro.kairo",
                     "begin": "\\b(macro)\\s+([a-z0-9_]+[A-Za-z0-9_]*)(\\()",
                     "end": "\\)\\s*->\\s*([a-z0-9_]+)\\s*\\{",
                     "beginCaptures": {
                         "1": {
-                            "name": "keyword.control.macro.helix"
+                            "name": "keyword.control.macro.kairo"
                         },
                         "2": {
-                            "name": "entity.name.function.macro.helix"
+                            "name": "entity.name.function.macro.kairo"
                         },
                         "3": {
-                            "name": "punctuation.definition.parameters.begin.helix"
+                            "name": "punctuation.definition.parameters.begin.kairo"
                         }
                     },
                     "endCaptures": {
                         "0": {
-                            "name": "punctuation.definition.parameters.end.helix"
+                            "name": "punctuation.definition.parameters.end.kairo"
                         },
                         "1": {
-                            "name": "entity.name.type.return.helix"
+                            "name": "entity.name.type.return.kairo"
                         },
                         "2": {
-                            "name": "punctuation.definition.body.begin.helix"
+                            "name": "punctuation.definition.body.begin.kairo"
                         }
                     }
                 }
@@ -528,14 +528,14 @@
             "patterns": [
                 {
                     "comment": "namespace (non-type, non-function path segment)",
-                    "name": "entity.other.namespace.helix",
+                    "name": "entity.other.namespace.kairo",
                     "match": "(?<![A-Za-z0-9_])([A-Za-z0-9_]+)(::)",
                     "captures": {
                         "1": {
-                            "name": "entity.name.namespace.helix"
+                            "name": "entity.name.namespace.kairo"
                         },
                         "2": {
-                            "name": "keyword.operator.namespace.helix"
+                            "name": "keyword.operator.namespace.kairo"
                         }
                     }
                 }
@@ -544,27 +544,27 @@
         "punctuation": {
             "patterns": [
                 {
-                    "name": "punctuation.comma.helix",
+                    "name": "punctuation.comma.kairo",
                     "match": ","
                 },
                 {
-                    "name": "punctuation.brackets.curly.helix",
+                    "name": "punctuation.brackets.curly.kairo",
                     "match": "[{}]"
                 },
                 {
-                    "name": "punctuation.brackets.round.helix",
+                    "name": "punctuation.brackets.round.kairo",
                     "match": "[()]"
                 },
                 {
-                    "name": "punctuation.semi.helix",
+                    "name": "punctuation.semi.kairo",
                     "match": ";"
                 },
                 {
-                    "name": "punctuation.brackets.square.helix",
+                    "name": "punctuation.brackets.square.kairo",
                     "match": "[\\[\\]]"
                 },
                 {
-                    "name": "punctuation.brackets.angle.helix",
+                    "name": "punctuation.brackets.angle.kairo",
                     "match": "(?<!=)[<>]"
                 }
             ]
@@ -573,17 +573,17 @@
             "patterns": [
                 {
                     "comment": "f-string formatting braces",
-                    "name": "punctuation.section.embedded.helix",
+                    "name": "punctuation.section.embedded.kairo",
                     "begin": "\\{",
                     "beginCaptures": {
                         "0": {
-                            "name": "punctuation.section.embedded.begin.helix"
+                            "name": "punctuation.section.embedded.begin.kairo"
                         }
                     },
                     "end": "\\}",
                     "endCaptures": {
                         "0": {
-                            "name": "punctuation.section.embedded.end.helix"
+                            "name": "punctuation.section.embedded.end.kairo"
                         }
                     },
                     "patterns": [
@@ -597,23 +597,23 @@
         "f-strings": {
             "patterns": [
                 {
-                    "name": "string.quoted.double.helix",
+                    "name": "string.quoted.double.kairo",
                     "begin": "(\\b[fFrRuUbB])([bBuU])?((['\"]))",
                     "beginCaptures": {
                         "1": {
-                            "name": "keyword.other.f-string.helix"
+                            "name": "keyword.other.f-string.kairo"
                         },
                         "2": {
-                            "name": "keyword.other.f-string.helix"
+                            "name": "keyword.other.f-string.kairo"
                         },
                         "3": {
-                            "name": "punctuation.definition.string.helix"
+                            "name": "punctuation.definition.string.kairo"
                         }
                     },
                     "end": "(\\3)",
                     "endCaptures": {
                         "0": {
-                            "name": "punctuation.definition.string.helix"
+                            "name": "punctuation.definition.string.kairo"
                         }
                     },
                     "patterns": [
@@ -638,20 +638,20 @@
                 },
                 {
                     "comment": "double-quoted strings and byte strings",
-                    "name": "string.quoted.double.helix",
+                    "name": "string.quoted.double.kairo",
                     "begin": "(\")",
                     "beginCaptures": {
                         "1": {
-                            "name": "string.quoted.byte.raw.helix"
+                            "name": "string.quoted.byte.raw.kairo"
                         },
                         "2": {
-                            "name": "punctuation.definition.string.helix"
+                            "name": "punctuation.definition.string.kairo"
                         }
                     },
                     "end": "\"",
                     "endCaptures": {
                         "0": {
-                            "name": "punctuation.definition.string.helix"
+                            "name": "punctuation.definition.string.kairo"
                         }
                     },
                     "patterns": [
@@ -665,20 +665,20 @@
                 },
                 {
                     "comment": "characters and bytes",
-                    "name": "string.quoted.single.char.helix",
+                    "name": "string.quoted.single.char.kairo",
                     "begin": "(')",
                     "beginCaptures": {
                         "1": {
-                            "name": "string.quoted.byte.raw.helix"
+                            "name": "string.quoted.byte.raw.kairo"
                         },
                         "2": {
-                            "name": "punctuation.definition.char.helix"
+                            "name": "punctuation.definition.char.kairo"
                         }
                     },
                     "end": "'",
                     "endCaptures": {
                         "0": {
-                            "name": "punctuation.definition.char.helix"
+                            "name": "punctuation.definition.char.kairo"
                         }
                     },
                     "patterns": [
@@ -693,12 +693,12 @@
             "patterns": [
                 {
                     "comment": "self",
-                    "name": "variable.language.self.helix",
+                    "name": "variable.language.self.kairo",
                     "match": "\\bself\\b"
                 },
                 {
                     "comment": "super",
-                    "name": "variable.language.super.helix",
+                    "name": "variable.language.super.kairo",
                     "match": "\\bsuper\\b"
                 }
             ]
@@ -706,7 +706,7 @@
         "variables": {
             "patterns": [
                 {
-                    "name": "variable.other.helix",
+                    "name": "variable.other.kairo",
                     "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
                 }
             ]

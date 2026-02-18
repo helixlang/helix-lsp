@@ -37,12 +37,12 @@ class PublishDiagnosticServer(LanguageServer):
         
         try:
             async_print(4, f"Parsing document: {document.uri}")
-            helix_path = json.loads(open("config.json", "r").read())["helix_path"]
-            if not helix_path:
-                raise Exception("Helix path not set in config.json")
-            if not os.path.exists(helix_path):
-                raise Exception("Helix path does not exist")
-            command = [helix_path, file_path, "--lsp-mode"]
+            kairo_path = json.loads(open("config.json", "r").read())["kairo_path"]
+            if not kairo_path:
+                raise Exception("Kairo path not set in config.json")
+            if not os.path.exists(kairo_path):
+                raise Exception("Kairo path does not exist")
+            command = [kairo_path, file_path, "--lsp-mode"]
             async_print(4, f"Running command: {command}")
             
             process: subprocess.Popen = subprocess.Popen(
@@ -51,7 +51,7 @@ class PublishDiagnosticServer(LanguageServer):
             )
             result: str = process.communicate()[0].decode("utf-8")
             exit_code: int = process.returncode
-            async_print(4, f"Result from Helix: {result}, Exit code: {exit_code}")
+            async_print(4, f"Result from Kairo: {result}, Exit code: {exit_code}")
 
             if exit_code:
                 if result:
@@ -89,9 +89,9 @@ class PublishDiagnosticServer(LanguageServer):
             raise e
 
                     
-HelixLanguageServer = PublishDiagnosticServer("diag", "v0.1")
+KairoLanguageServer = PublishDiagnosticServer("diag", "v0.1")
 
-@HelixLanguageServer.feature(types.TEXT_DOCUMENT_DID_OPEN)
+@KairoLanguageServer.feature(types.TEXT_DOCUMENT_DID_OPEN)
 def did_open(ls: PublishDiagnosticServer, params: types.DidOpenTextDocumentParams):
     doc = ls.workspace.get_text_document(params.text_document.uri)
     
@@ -109,7 +109,7 @@ def did_open(ls: PublishDiagnosticServer, params: types.DidOpenTextDocumentParam
         )
 
 
-@HelixLanguageServer.feature(types.TEXT_DOCUMENT_DID_CHANGE)
+@KairoLanguageServer.feature(types.TEXT_DOCUMENT_DID_CHANGE)
 def did_change(ls: PublishDiagnosticServer, params: types.DidChangeTextDocumentParams):
     doc = ls.workspace.get_text_document(params.text_document.uri)
     
@@ -140,7 +140,7 @@ def send_diagnostics(ls, uri):
             )
         )
 
-def save_port_info(server_ptr: list[HelixLanguageServer]): # type: ignore
+def save_port_info(server_ptr: list[KairoLanguageServer]): # type: ignore
     time.sleep(1)  # Wait for server to start
     
     actual_port = server_ptr[0]._server.sockets[0].getsockname()[1]
@@ -154,7 +154,7 @@ def save_port_info(server_ptr: list[HelixLanguageServer]): # type: ignore
         f.write(json.dumps(json_data, indent=4))
 
 if __name__ == '__main__':
-    server = HelixLanguageServer
+    server = KairoLanguageServer
     
     host = '127.0.0.1'
     port = 0  # Let OS pick a free port
