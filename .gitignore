@@ -9,7 +9,7 @@ build/
 venv/
 .venv/
 
-helix-lsp-venv/
+kairo-lsp-venv/
 
 # Clanged Cache
 .clangd/
