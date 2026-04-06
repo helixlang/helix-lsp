@@ -402,13 +402,14 @@ class KairoLanguageServer(LanguageServer):
 
             command = [self.kairo_path, file_path, "--lsp-mode"]
 
+            if analyze:
+                command.append("--emit-ir")
+
             # Use persistent cached compile_commands
             self.compile_db.load(file_path)
             if self.compile_db.commands:
                 command.extend(self.compile_db.commands)
 
-            if analyze:
-                command.append("--emit-ir")
 
             env = os.environ.copy()
 
