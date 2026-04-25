@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/kairolang/kairo-lsp"
     },
-    "version": "0.5.2",
+    "version": "0.5.3",
     "publisher": "KSF",
     "engines": {
         "vscode": "^1.94.0"
@@ -59,17 +59,17 @@
                 "kairo.path": {
                     "type": "string",
                     "default": "kairo",
-                    "description": "Path to the Kairo executable"
+                    "description": "Path to the Kairo compiler. Leave as 'kairo' to auto-detect from PATH."
                 },
                 "kairo.pythonPath": {
                     "type": "string",
                     "default": "python",
-                    "description": "Path to the Python executable"
+                    "description": "Path to Python 3. Leave as 'python' to auto-detect from PATH."
                 },
                 "kairo.serverPath": {
                     "type": "string",
-                    "default": "kairo-lsp",
-                    "description": "Path to the Kairo Language Server executable"
+                    "default": "",
+                    "description": "Path to lsp-server.py. Leave empty to derive from compiler location."
                 }
             }
         },
