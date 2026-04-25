@@ -1,6 +1,6 @@
 {
-    "name": "kairo-language",
-    "displayName": "kairo-language",
+    "name": "kairo",
+    "displayName": "Kairo Language Support",
     "description": "Minimal language support and syntax highlighting for Kairo.",
     "readme": "README.md",
     "icon": "public/icons/kairo-v3.ico",
@@ -8,8 +8,8 @@
         "type": "git",
         "url": "https://github.com/kairolang/kairo-lsp"
     },
-    "version": "0.3.0",
-    "publisher": "kairo-lang",
+    "version": "0.5.2",
+    "publisher": "KSF",
     "engines": {
         "vscode": "^1.94.0"
     },
@@ -103,7 +103,19 @@
                     "kairo"
                 ]
             }
-        ]
+        ],
+        "configurationDefaults": {
+            "editor.tokenColorCustomizations": {
+                "textMateRules": [
+                    {
+                        "scope": "string.quoted.double.raw.kairo",
+                        "settings": {
+                            "foreground": "#f26d78"
+                        }
+                    }
+                ]
+            }
+        }
     },
     "scripts": {
         "lint": "eslint src --ext ts",

@@ -4,6 +4,33 @@
     "name": "kairo",
     "patterns": [
         {
+            "include": "#inline-cpp"
+        },
+        {
+            "include": "#inline-c"
+        },
+        {
+            "include": "#inline-asm"
+        },
+        {
+            "include": "#inline-rust"
+        },
+        {
+            "include": "#inline-swift"
+        },
+        {
+            "include": "#inline-cpp-call"
+        },
+        {
+            "include": "#inline-c-call"
+        },
+        {
+            "include": "#inline-asm-call"
+        },
+        {
+            "include": "#inline-rust-call"
+        },
+        {
             "include": "#block-comments"
         },
         {
@@ -47,6 +74,190 @@
         }
     ],
     "repository": {
+        "inline-cpp": {
+            "begin": "(?i)(\\binline\\b)\\s+(\"(?:c\\+\\+|cxx|cpp|cc)\")(\\s*\\{)",
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.function.kairo"
+                },
+                "2": {
+                    "name": "string.quoted.double.kairo"
+                },
+                "3": {
+                    "name": "punctuation.brackets.curly.kairo"
+                }
+            },
+            "end": "\\}",
+            "contentName": "meta.embedded.block.cpp",
+            "patterns": [
+                {
+                    "include": "source.cpp"
+                }
+            ]
+        },
+        "inline-c": {
+            "begin": "(?i)(\\binline\\b)\\s+(\"c\")(\\s*\\{)",
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.function.kairo"
+                },
+                "2": {
+                    "name": "string.quoted.double.kairo"
+                },
+                "3": {
+                    "name": "punctuation.brackets.curly.kairo"
+                }
+            },
+            "end": "\\}",
+            "contentName": "meta.embedded.block.c",
+            "patterns": [
+                {
+                    "include": "source.c"
+                }
+            ]
+        },
+        "inline-asm": {
+            "begin": "(?i)(\\binline\\b)\\s+(\"(?:asm|assembly)\")(\\s*\\{)",
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.function.kairo"
+                },
+                "2": {
+                    "name": "string.quoted.double.kairo"
+                },
+                "3": {
+                    "name": "punctuation.brackets.curly.kairo"
+                }
+            },
+            "end": "\\}",
+            "contentName": "meta.embedded.block.asm",
+            "patterns": [
+                {
+                    "include": "source.asm"
+                }
+            ]
+        },
+        "inline-rust": {
+            "begin": "(?i)(\\binline\\b)\\s+(\"rust\")(\\s*\\{)",
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.function.kairo"
+                },
+                "2": {
+                    "name": "string.quoted.double.kairo"
+                },
+                "3": {
+                    "name": "punctuation.brackets.curly.kairo"
+                }
+            },
+            "end": "\\}",
+            "contentName": "meta.embedded.block.rust",
+            "patterns": [
+                {
+                    "include": "source.rust"
+                }
+            ]
+        },
+        "inline-swift": {
+            "begin": "(?i)(\\binline\\b)\\s+(\"swift\")(\\s*\\{)",
+            "beginCaptures": {
+                "1": {
+                    "name": "keyword.function.kairo"
+                },
+                "2": {
+                    "name": "string.quoted.double.kairo"
+                },
+                "3": {
+                    "name": "punctuation.brackets.curly.kairo"
+                }
+            },
+            "end": "\\}",
+            "contentName": "meta.embedded.block.swift",
+            "patterns": [
+                {
+                    "include": "source.swift"
+                }
+            ]
+        },
+        "inline-cpp-call": {
+    "begin": "(?i)(__inline_(?:cpp|cxx|cc|c\\+\\+))\\s*\\(\"",
+    "end": "\"\\s*\\)",
+    "beginCaptures": {
+        "1": {
+            "name": "support.function.inline-cpp.kairo"
+        }
+    },
+    "contentName": "meta.embedded.inline.cpp",
+    "patterns": [
+        {
+            "match": "\\\\[\"\\\\]",
+            "name": "constant.character.escape.kairo"
+        },
+        {
+            "include": "source.cpp"
+        }
+    ]
+},
+        "inline-c-call": {
+            "begin": "(?i)(__inline_c)\\s*\\(\"",
+            "end": "\"\\s*\\)",
+            "beginCaptures": {
+                "1": {
+                    "name": "support.function.inline-c.kairo"
+                }
+            },
+            "contentName": "meta.embedded.inline.c",
+            "patterns": [
+                {
+                    "include": "source.c"
+                }
+            ]
+        },
+        "inline-asm-call": {
+            "begin": "(?i)(__inline_(?:asm|assembly))\\s*\\(\"",
+            "end": "\"\\s*\\)",
+            "beginCaptures": {
+                "1": {
+                    "name": "support.function.inline-asm.kairo"
+                }
+            },
+            "contentName": "meta.embedded.inline.asm",
+            "patterns": [
+                {
+                    "include": "source.asm"
+                }
+            ]
+        },
+        "inline-rust-call": {
+            "begin": "(?i)(__inline_rust)\\s*\\(\"",
+            "end": "\"\\s*\\)",
+            "beginCaptures": {
+                "1": {
+                    "name": "support.function.inline-rust.kairo"
+                }
+            },
+            "contentName": "meta.embedded.inline.rust",
+            "patterns": [
+                {
+                    "include": "source.rust"
+                }
+            ]
+        },
+        "inline-swift-call": {
+            "begin": "(?i)(__inline_swift)\\s*\\(\"",
+            "end": "\"\\s*\\)",
+            "beginCaptures": {
+                "1": {
+                    "name": "support.function.inline-swift.kairo"
+                }
+            },
+            "contentName": "meta.embedded.inline.swift",
+            "patterns": [
+                {
+                    "include": "source.swift"
+                }
+            ]
+        },
         "expressions": {
             "patterns": [
                 {
@@ -87,28 +298,78 @@
         "comments": {
             "patterns": [
                 {
-                    "name": "comment.line.doxygen",
-                    "match": "///.*$",
-                    "captures": {
-                        "0": { "name": "comment.line.doxygen" }
+                    "comment": "trailing doc comment ///<",
+                    "name": "comment.line.double-slash.documentation.kairo",
+                    "begin": "(///((<)))",
+                    "end": "$",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.comment.kairo"
+                        },
+                        "3": {
+                            "name": "storage.type.class.doxygen.kairo"
+                        }
                     },
                     "patterns": [
                         {
-                            "name": "keyword.other.doxygen",
-                            "match": "\\\\(param|return|brief|note|warning|see|throws|exception|retval|sa|ingroup|author|date|version)\\b"
+                            "include": "#doc-content"
                         }
                     ]
                 },
                 {
-                    "name": "comment.line.kairo",
-                    "match": "//.*$",
-                    "captures": {
-                        "0": { "name": "comment.line.kairo" }
+                    "comment": "consecutive /// doc comment block with while",
+                    "name": "comment.line.double-slash.documentation.kairo",
+                    "begin": "^\\s*(///)",
+                    "while": "^\\s*(///)",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.comment.kairo"
+                        }
+                    },
+                    "whileCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.comment.kairo"
+                        }
                     },
                     "patterns": [
                         {
-                            "name": "invalid.illegal.doxygen",
-                            "match": "\\\\(param|return|brief|note|warning|see|throws|exception|retval|sa|ingroup|author|date|version)\\b"
+                            "include": "#doc-content"
+                        }
+                    ]
+                },
+                {
+                    "comment": "trailing doc comment //<",
+                    "name": "comment.line.double-slash.documentation.kairo",
+                    "begin": "(//(<))",
+                    "end": "$",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.comment.kairo"
+                        },
+                        "2": {
+                            "name": "storage.type.class.doxygen.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-content"
+                        }
+                    ]
+                },
+                {
+                    "comment": "line comment",
+                    "name": "comment.line.double-slash.kairo",
+                    "begin": "//",
+                    "end": "$",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.comment.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "name": "invalid.illegal.doxygen.kairo",
+                            "match": "\\\\\\w+\\b"
                         }
                     ]
                 }
@@ -117,34 +378,566 @@
         "block-comments": {
             "patterns": [
                 {
-                    "comment": "block comments",
+                    "comment": "doc block comment /** */",
+                    "name": "comment.block.documentation.kairo",
+                    "begin": "/\\*\\*(?!/)",
+                    "end": "\\*/",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.comment.begin.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.comment.end.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-content"
+                        }
+                    ]
+                },
+                {
+                    "comment": "block comment /* */",
                     "name": "comment.block.kairo",
                     "begin": "/\\*",
-                    "end": "\\*/"
+                    "end": "\\*/",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.comment.begin.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.comment.end.kairo"
+                        }
+                    }
                 }
             ]
+        },
+        "doc-content": {
+            "patterns": [
+                {
+                    "include": "#doc-block-leading-star"
+                },
+                {
+                    "include": "#doc-code-block-doxygen"
+                },
+                {
+                    "include": "#doc-code-block-markdown"
+                },
+                {
+                    "include": "#doc-doxygen-command"
+                },
+                {
+                    "include": "#doc-markdown-heading"
+                },
+                {
+                    "include": "#doc-markdown-bold-italic"
+                },
+                {
+                    "include": "#doc-markdown-bold"
+                },
+                {
+                    "include": "#doc-markdown-italic-underscore"
+                },
+                {
+                    "include": "#doc-markdown-italic-star"
+                },
+                {
+                    "include": "#doc-markdown-inline-code"
+                },
+                {
+                    "include": "#doc-markdown-link"
+                },
+                {
+                    "include": "#doc-markdown-ref-link"
+                }
+            ]
+        },
+        "doc-block-leading-star": {
+            "comment": "leading * in /** */ block comments",
+            "match": "^\\s*\\*(?!/)",
+            "name": "punctuation.definition.comment.kairo"
+        },
+        "doc-code-block-doxygen": {
+            "patterns": [
+                {
+                    "comment": "\\code{cpp} block",
+                    "contentName": "meta.embedded.block.cpp",
+                    "begin": "\\\\code\\{(?i)(cpp|c\\+\\+|cc|cxx)\\}",
+                    "end": "\\\\endcode\\b",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "storage.type.class.doxygen.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "storage.type.class.doxygen.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-block-leading-star"
+                        },
+                        {
+                            "include": "source.cpp"
+                        }
+                    ]
+                },
+                {
+                    "comment": "\\code{c} block",
+                    "contentName": "meta.embedded.block.c",
+                    "begin": "\\\\code\\{(?i)(c)\\}",
+                    "end": "\\\\endcode\\b",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "storage.type.class.doxygen.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "storage.type.class.doxygen.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-block-leading-star"
+                        },
+                        {
+                            "include": "source.c"
+                        }
+                    ]
+                },
+                {
+                    "comment": "\\code{rust} block",
+                    "contentName": "meta.embedded.block.rust",
+                    "begin": "\\\\code\\{(?i)(rust|rs)\\}",
+                    "end": "\\\\endcode\\b",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "storage.type.class.doxygen.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "storage.type.class.doxygen.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-block-leading-star"
+                        },
+                        {
+                            "include": "source.rust"
+                        }
+                    ]
+                },
+                {
+                    "comment": "\\code or \\code{kairo} default to kairo",
+                    "contentName": "meta.embedded.block.kairo",
+                    "begin": "\\\\code(\\{(?i)(kairo|kro)\\})?\\b",
+                    "end": "\\\\endcode\\b",
+                    "beginCaptures": {
+                        "0": {
+                            "name": "storage.type.class.doxygen.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "storage.type.class.doxygen.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-block-leading-star"
+                        },
+                        {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#constants"
+                        },
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#types"
+                        },
+                        {
+                            "include": "#strings"
+                        },
+                        {
+                            "include": "#namespaces"
+                        },
+                        {
+                            "include": "#punctuation"
+                        },
+                        {
+                            "include": "#variables"
+                        }
+                    ]
+                }
+            ]
+        },
+        "doc-code-block-markdown": {
+            "patterns": [
+                {
+                    "comment": "```cpp/c++/cc/cxx fenced block",
+                    "contentName": "meta.embedded.block.cpp",
+                    "begin": "(`{3,})(?i)(cpp|c\\+\\+|cc|cxx)\\s*$",
+                    "end": "\\1",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.code.begin.kairo"
+                        },
+                        "2": {
+                            "name": "entity.name.tag.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.code.end.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-block-leading-star"
+                        },
+                        {
+                            "include": "source.cpp"
+                        }
+                    ]
+                },
+                {
+                    "comment": "```c fenced block",
+                    "contentName": "meta.embedded.block.c",
+                    "begin": "(`{3,})(?i)(c)\\s*$",
+                    "end": "\\1",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.code.begin.kairo"
+                        },
+                        "2": {
+                            "name": "entity.name.tag.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.code.end.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-block-leading-star"
+                        },
+                        {
+                            "include": "source.c"
+                        }
+                    ]
+                },
+                {
+                    "comment": "```rust fenced block",
+                    "contentName": "meta.embedded.block.rust",
+                    "begin": "(`{3,})(?i)(rust|rs)\\s*$",
+                    "end": "\\1",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.code.begin.kairo"
+                        },
+                        "2": {
+                            "name": "entity.name.tag.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.code.end.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-block-leading-star"
+                        },
+                        {
+                            "include": "source.rust"
+                        }
+                    ]
+                },
+                {
+                    "comment": "```python/py fenced block",
+                    "contentName": "meta.embedded.block.python",
+                    "begin": "(`{3,})(?i)(python|py)\\s*$",
+                    "end": "\\1",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.code.begin.kairo"
+                        },
+                        "2": {
+                            "name": "entity.name.tag.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.code.end.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-block-leading-star"
+                        },
+                        {
+                            "include": "source.python"
+                        }
+                    ]
+                },
+                {
+                    "comment": "```kairo or ```kro fenced block",
+                    "contentName": "meta.embedded.block.kairo",
+                    "begin": "(`{3,})(?i)(kairo|kro)\\s*$",
+                    "end": "\\1",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.code.begin.kairo"
+                        },
+                        "2": {
+                            "name": "entity.name.tag.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.code.end.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-block-leading-star"
+                        },
+                        {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#constants"
+                        },
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#types"
+                        },
+                        {
+                            "include": "#strings"
+                        },
+                        {
+                            "include": "#namespaces"
+                        },
+                        {
+                            "include": "#punctuation"
+                        },
+                        {
+                            "include": "#variables"
+                        }
+                    ]
+                },
+                {
+                    "comment": "``` with unknown or no language tag default to kairo",
+                    "contentName": "meta.embedded.block.kairo",
+                    "begin": "(`{3,})(\\w*)\\s*$",
+                    "end": "\\1",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.code.begin.kairo"
+                        },
+                        "2": {
+                            "name": "entity.name.tag.kairo"
+                        }
+                    },
+                    "endCaptures": {
+                        "0": {
+                            "name": "punctuation.definition.code.end.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#doc-block-leading-star"
+                        },
+                        {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#constants"
+                        },
+                        {
+                            "include": "#functions"
+                        },
+                        {
+                            "include": "#types"
+                        },
+                        {
+                            "include": "#strings"
+                        },
+                        {
+                            "include": "#namespaces"
+                        },
+                        {
+                            "include": "#punctuation"
+                        },
+                        {
+                            "include": "#variables"
+                        }
+                    ]
+                }
+            ]
+        },
+        "doc-doxygen-command": {
+            "comment": "any \\command",
+            "name": "storage.type.class.doxygen.kairo",
+            "match": "\\\\\\w+\\b"
+        },
+        "doc-markdown-heading": {
+            "comment": "# heading in doc comments",
+            "name": "entity.name.function.heading.kairo",
+            "match": "#{1,6}\\s+.*$"
+        },
+        "doc-markdown-bold-italic": {
+            "comment": "***bold italic***",
+            "name": "markup.bold.italic.kairo",
+            "match": "(\\*{3}|_{3})(.+?)(\\1)",
+            "captures": {
+                "1": {
+                    "name": "punctuation.definition.bold.italic.kairo"
+                },
+                "2": {
+                    "name": "markup.bold.italic.kairo"
+                },
+                "3": {
+                    "name": "punctuation.definition.bold.italic.kairo"
+                }
+            }
+        },
+        "doc-markdown-bold": {
+            "comment": "**bold**",
+            "name": "markup.bold.kairo",
+            "match": "(\\*{2}|_{2})(.+?)(\\1)",
+            "captures": {
+                "1": {
+                    "name": "punctuation.definition.bold.kairo"
+                },
+                "2": {
+                    "name": "markup.bold.kairo"
+                },
+                "3": {
+                    "name": "punctuation.definition.bold.kairo"
+                }
+            }
+        },
+        "doc-markdown-italic-underscore": {
+            "comment": "_italic_",
+            "name": "markup.italic.kairo",
+            "match": "(?<=\\s|^)(_)([^_]+?)(_)",
+            "captures": {
+                "1": {
+                    "name": "punctuation.definition.italic.kairo"
+                },
+                "2": {
+                    "name": "markup.italic.kairo"
+                },
+                "3": {
+                    "name": "punctuation.definition.italic.kairo"
+                }
+            }
+        },
+        "doc-markdown-italic-star": {
+            "comment": "*italic*",
+            "name": "markup.italic.kairo",
+            "match": "(?<=\\s|^)(\\*)([^*]+?)(\\*)",
+            "captures": {
+                "1": {
+                    "name": "punctuation.definition.italic.kairo"
+                },
+                "2": {
+                    "name": "markup.italic.kairo"
+                },
+                "3": {
+                    "name": "punctuation.definition.italic.kairo"
+                }
+            }
+        },
+        "doc-markdown-inline-code": {
+            "comment": "`inline code`",
+            "name": "markup.inline.raw.string.kairo",
+            "begin": "(?<!`)`(?!`)",
+            "end": "`",
+            "beginCaptures": {
+                "0": {
+                    "name": "punctuation.definition.raw.begin.kairo"
+                }
+            },
+            "endCaptures": {
+                "0": {
+                    "name": "punctuation.definition.raw.end.kairo"
+                }
+            }
+        },
+        "doc-markdown-link": {
+            "comment": "[text](url) markdown link",
+            "name": "meta.link.kairo",
+            "match": "(\\[)([^\\]]*)(\\])(\\()([^\\)]*)(\\))",
+            "captures": {
+                "1": {
+                    "name": "punctuation.definition.link.begin.kairo"
+                },
+                "2": {
+                    "name": "markup.underline.link.kairo"
+                },
+                "3": {
+                    "name": "punctuation.definition.link.end.kairo"
+                },
+                "4": {
+                    "name": "punctuation.definition.link.begin.kairo"
+                },
+                "5": {
+                    "name": "string.other.link.kairo"
+                },
+                "6": {
+                    "name": "punctuation.definition.link.end.kairo"
+                }
+            }
+        },
+        "doc-markdown-ref-link": {
+            "comment": "[reference] style link",
+            "name": "meta.link.reference.kairo",
+            "match": "(\\[)([^\\]]*)(\\])",
+            "captures": {
+                "1": {
+                    "name": "punctuation.definition.link.begin.kairo"
+                },
+                "2": {
+                    "name": "markup.underline.link.kairo"
+                },
+                "3": {
+                    "name": "punctuation.definition.link.end.kairo"
+                }
+            }
         },
         "constants": {
             "patterns": [
                 {
                     "name": "constant.numeric.decimal.kairo",
-                    "match": "\\b\\d[\\d_]*(\\.?)[\\d_]*(?:(E|e)([+-]?)([\\d_]+))?\\b"
+                    "match": "(?<![\\w])\\d[\\d_]*(\\.?)[\\d_]*(?:(E|e)([+-]?)([\\d_]+))?(?![\\w])"
                 },
                 {
                     "name": "constant.numeric.hex.kairo",
-                    "match": "\\b0x[\\da-fA-F_]+\\b"
+                    "match": "(?<![\\w])0x[\\da-fA-F_]+(?![\\w])"
                 },
                 {
                     "name": "constant.numeric.oct.kairo",
-                    "match": "\\b0o[0-7_]+\\b"
+                    "match": "(?<![\\w])0o[0-7_]+(?![\\w])"
                 },
                 {
                     "name": "constant.numeric.bin.kairo",
-                    "match": "\\b0b[01_]+\\b"
-                },
-                {
-                    "name": "constant.language.bool.kairo",
-                    "match": "\\b(true|false|null|nullptr)\\b"
+                    "match": "(?<![\\w])0b[01_]+(?![\\w])"
                 }
             ]
         },
@@ -190,7 +983,7 @@
                             "name": "punctuation.brackets.angle.kairo"
                         }
                     },
-                    "end": "\\{|;",
+                    "end": "\\{|;|$",
                     "endCaptures": {
                         "0": {
                             "name": "punctuation.brackets.curly.kairo"
@@ -236,24 +1029,15 @@
                     ]
                 },
                 {
-                    "comment": "function/method calls, chaining, and generic function calls, including generics before the parenthesis",
+                    "comment": "function/method calls with optional generics",
                     "name": "meta.function.call.kairo",
-                    "begin": "(((?!self|super))?[A-Za-z0-9_]+)((<([A-Za-z0-9_]+(::[A-Za-z0-9_]+)*(,\\s*[A-Za-z0-9_]+(::[A-Za-z0-9_]+)*)*)>)?)(\\()",
+                    "begin": "(((?!self|super))[A-Za-z0-9_]+)(?=\\s*(?:<[^>]*>)?\\s*\\()",
                     "beginCaptures": {
                         "1": {
                             "name": "entity.name.function.kairo"
-                        },
-                        "4": {
-                            "name": "storage.type.generic.kairo"
-                        },
-                        "5": {
-                            "name": "entity.name.type.kairo"
-                        },
-                        "9": {
-                            "name": "punctuation.brackets.round.kairo"
                         }
                     },
-                    "end": "\\)",
+                    "end": "\\)|$",
                     "endCaptures": {
                         "0": {
                             "name": "punctuation.brackets.round.kairo"
@@ -268,6 +1052,9 @@
                         },
                         {
                             "include": "#attributes"
+                        },
+                        {
+                            "include": "#generics"
                         },
                         {
                             "include": "#keywords"
@@ -298,9 +1085,6 @@
                         },
                         {
                             "include": "#variables"
-                        },
-                        {
-                            "include": "#generics"
                         }
                     ]
                 }
@@ -336,7 +1120,7 @@
                 {
                     "comment": "Variable declaration keywords",
                     "name": "keyword.declaration.kairo",
-                    "match": "\\b(eval|var|static|const)\\b"
+                    "match": "\\b(eval|var|static|const|atomic)\\b"
                 },
                 {
                     "comment": "Access specifiers",
@@ -361,12 +1145,12 @@
                 {
                     "comment": "Primitive Type keywords",
                     "name": "keyword.primitive.kairo",
-                    "match": "\\b(f32|f64|f80|i256|f128|i128|i16|i32|i64|i8|isize|u128|u256|u16|u32|u64|u8|usize|char|bool|void)\\b"
+                    "match": "\\b(f32|f64|f80|f128|f256|i512|i256|i128|i16|i32|i64|i8|isize|u512|u256|u128|u16|u32|u64|u8|usize|char|bool|void)\\b"
                 },
                 {
                     "comment": "Operators",
                     "name": "keyword.operator.kairo",
-                    "match": "\\b(\\+|\\+\\+|\\+=|\\+-|\\-|\\-\\-|\\-=|\\*|\\*=|\\/|\\/=|%|%=|&|&=|&&|&&=|@|@=|\\^|\\^=|^^|^^=|~|~&|~&=|~\\||~\\|=|\\||\\|=|\\|\\||\\|\\|=|!|!=|!&|!&=|!\\||!\\|=|<<|<<=|>>|>>=|==|===|>|>=|<|<=|\\.\\.|\\.\\.=|::|->|=|\\*\\*|\\*\\*=)\\b"
+                    "match": "(\\?->\\*|\\?->|\\?\\.\\*|\\?\\.|<<=|>>=|\\.\\.\\.=|\\.\\.=|->\\*|===|<=>|&&=|\\|\\|=|\\^\\^=|~&=|~\\|=|!&=|!\\|=|\\|>|<\\||\\+\\+|--|\\*\\*=|\\*\\*|\\+=|-=|\\*=|\\/=|%=|&=|\\|=|\\^=|@=|!=|==|<=|>=|<<|>>|&&|\\|\\||\\^\\^|~&|~\\||!&|!\\||\\.\\.=|\\.\\.|->|=>|\\.\\*|\\.\\.\\.|\\+|-|\\*|\\/|%|&|\\||\\^|~|!|=|\\?|<|>|\\\\|\\.)"
                 }
             ]
         },
@@ -416,7 +1200,7 @@
                             "name": "punctuation.definition.generic.begin.kairo"
                         }
                     },
-                    "end": ">",
+                    "end": ">|$",
                     "endCaptures": {
                         "0": {
                             "name": "punctuation.definition.generic.end.kairo"
@@ -424,7 +1208,19 @@
                     },
                     "patterns": [
                         {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#types"
+                        },
+                        {
+                            "include": "#constants"
+                        },
+                        {
                             "include": "#namespaces"
+                        },
+                        {
+                            "include": "#variables"
                         },
                         {
                             "include": "#punctuation"
@@ -457,68 +1253,82 @@
                 }
             ]
         },
+        "attributes": {
+            "patterns": [
+                {
+                    "comment": "@foo<T>(a, b) or @foo(a, b) or @foo<T> or @foo",
+                    "name": "meta.attribute.kairo",
+                    "begin": "(@)([a-zA-Z_][a-zA-Z0-9_]*)",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.annotation.kairo"
+                        },
+                        "2": {
+                            "name": "entity.name.tag.kairo"
+                        }
+                    },
+                    "end": "(?=[^a-zA-Z0-9_<>(,\\s])|$",
+                    "patterns": [
+                        {
+                            "include": "#generics"
+                        },
+                        {
+                            "include": "#constants"
+                        },
+                        {
+                            "include": "#strings"
+                        },
+                        {
+                            "include": "#keywords"
+                        },
+                        {
+                            "include": "#namespaces"
+                        },
+                        {
+                            "include": "#variables"
+                        },
+                        {
+                            "include": "#punctuation"
+                        }
+                    ]
+                }
+            ]
+        },
         "define": {
             "patterns": [
                 {
-                    "comment": "Define invocation with optional parameters",
-                    "name": "meta.define.invocation.kairo",
-                    "match": "\\s?([a-z_][A-Za-z0-9_]+!)",
+                    "comment": "macro definition with @foo",
+                    "match": "\\b(macro)\\s+(@)([a-zA-Z_][a-zA-Z0-9_]*!?)",
                     "captures": {
                         "1": {
-                            "name": "entity.name.function.define.kairo"
-                        }
-                    }
-                },
-                {
-                    "comment": "Define macro with optional parameter list and complex body",
-                    "name": "meta.define.macro.kairo",
-                    "begin": "\\b(macro)\\s+([a-z0-9_]+[A-Za-z0-9_]*!)(\\s*\\()?",
-                    "end": "\\)\\s*->\\s*([a-z0-9_]+)\\s*\\{",
-                    "beginCaptures": {
-                        "1": {
-                            "name": "keyword.control.define.kairo"
+                            "name": "keyword.control.macro.kairo"
                         },
                         "2": {
-                            "name": "entity.name.function.define.kairo"
+                            "name": "punctuation.definition.annotation.kairo"
                         },
                         "3": {
-                            "name": "punctuation.definition.parameters.begin.kairo"
-                        }
-                    },
-                    "endCaptures": {
-                        "1": {
-                            "name": "punctuation.definition.parameters.end.kairo"
-                        },
-                        "2": {
-                            "name": "punctuation.definition.body.begin.kairo"
+                            "name": "entity.name.function.macro.kairo"
                         }
                     }
                 },
                 {
-                    "comment": "Proc macro",
-                    "name": "meta.procedure.macro.kairo",
-                    "begin": "\\b(macro)\\s+([a-z0-9_]+[A-Za-z0-9_]*)(\\()",
-                    "end": "\\)\\s*->\\s*([a-z0-9_]+)\\s*\\{",
-                    "beginCaptures": {
+                    "comment": "macro definition with foo!",
+                    "match": "\\b(macro)\\s+([a-zA-Z_][a-zA-Z0-9_]*!?)",
+                    "captures": {
                         "1": {
                             "name": "keyword.control.macro.kairo"
                         },
                         "2": {
                             "name": "entity.name.function.macro.kairo"
-                        },
-                        "3": {
-                            "name": "punctuation.definition.parameters.begin.kairo"
                         }
-                    },
-                    "endCaptures": {
+                    }
+                },
+                {
+                    "comment": "macro invocation: foo!",
+                    "match": "(?<![A-Za-z0-9_@])[a-z_][A-Za-z0-9_]*!",
+                    "captures": {
                         "0": {
-                            "name": "punctuation.definition.parameters.end.kairo"
-                        },
-                        "1": {
-                            "name": "entity.name.type.return.kairo"
-                        },
-                        "2": {
-                            "name": "punctuation.definition.body.begin.kairo"
+                            "name": "entity.name.function.macro.kairo"
                         }
                     }
                 }
@@ -527,7 +1337,48 @@
         "namespaces": {
             "patterns": [
                 {
-                    "comment": "namespace (non-type, non-function path segment)",
+                    "comment": "namespace with generic then path: qux<T>::",
+                    "name": "entity.other.namespace.kairo",
+                    "match": "(?<![A-Za-z0-9_])([A-Za-z0-9_]+)(<[^>]*>)(::)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.namespace.kairo"
+                        },
+                        "2": {
+                            "name": "storage.type.generic.kairo"
+                        },
+                        "3": {
+                            "name": "keyword.operator.namespace.kairo"
+                        }
+                    }
+                },
+                {
+                    "comment": "namespace with turbofish: qux::<T>::",
+                    "name": "entity.other.namespace.kairo",
+                    "match": "(?<![A-Za-z0-9_])([A-Za-z0-9_]+)(::<[^>]*>)(::)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.namespace.kairo"
+                        },
+                        "2": {
+                            "name": "storage.type.generic.kairo"
+                        },
+                        "3": {
+                            "name": "keyword.operator.namespace.kairo"
+                        }
+                    }
+                },
+                {
+                    "comment": "identifier followed by generic only: qux<T>",
+                    "match": "(?<![A-Za-z0-9_])([A-Za-z0-9_]+)(?=<[^>]*>)",
+                    "captures": {
+                        "1": {
+                            "name": "entity.name.namespace.kairo"
+                        }
+                    }
+                },
+                {
+                    "comment": "plain namespace segment: foo::",
                     "name": "entity.other.namespace.kairo",
                     "match": "(?<![A-Za-z0-9_])([A-Za-z0-9_]+)(::)",
                     "captures": {
@@ -593,27 +1444,101 @@
                     ]
                 }
             ]
-		},
-        "f-strings": {
+        },
+        "strings": {
             "patterns": [
                 {
-                    "name": "string.quoted.double.kairo",
-                    "begin": "(\\b[fFrRuUbB])([bBuU])?((['\"]))",
+                    "include": "#r-strings"
+                },
+                {
+                    "include": "#b-strings"
+                },
+                {
+                    "include": "#f-strings"
+                },
+                {
+                    "include": "#normal-strings"
+                },
+                {
+                    "include": "#char-strings"
+                }
+            ]
+        },
+        "r-strings": {
+            "patterns": [
+                {
+                    "comment": "rf/fr raw f-string",
+                    "name": "string.quoted.double.raw.kairo",
+                    "begin": "(?i)(rf|fr)(\")",
                     "beginCaptures": {
                         "1": {
-                            "name": "keyword.other.f-string.kairo"
+                            "name": "storage.type.string.kairo"
                         },
                         "2": {
-                            "name": "keyword.other.f-string.kairo"
-                        },
-                        "3": {
-                            "name": "punctuation.definition.string.kairo"
+                            "name": "punctuation.definition.string.begin.kairo"
                         }
                     },
-                    "end": "(\\3)",
+                    "end": "(\")",
                     "endCaptures": {
-                        "0": {
-                            "name": "punctuation.definition.string.kairo"
+                        "1": {
+                            "name": "punctuation.definition.string.end.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#fstring-formatting-braces"
+                        },
+                        {
+                            "name": "string.quoted.double.raw.kairo",
+                            "match": "\\\\."
+                        }
+                    ]
+                },
+                {
+                    "comment": "r raw string",
+                    "name": "string.quoted.double.raw.kairo",
+                    "begin": "(?i)(r)(\")",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "storage.type.string.kairo"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.string.begin.kairo"
+                        }
+                    },
+                    "end": "(\")",
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.string.end.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "name": "string.quoted.double.raw.kairo",
+                            "match": "\\\\."
+                        }
+                    ]
+                }
+            ]
+        },
+        "b-strings": {
+            "patterns": [
+                {
+                    "comment": "bf/fb byte f-string",
+                    "name": "string.regexp.kairo",
+                    "begin": "(?i)(bf|fb)(\")",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "storage.type.string.kairo"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.string.begin.kairo"
+                        }
+                    },
+                    "end": "(\")",
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.string.end.kairo"
                         }
                     },
                     "patterns": [
@@ -624,34 +1549,27 @@
                             "include": "#escapes"
                         },
                         {
-                            "include": "#interpolations"
+                            "name": "invalid.illegal.non-ascii.kairo",
+                            "match": "[^\\x00-\\x7F]+"
                         }
                     ]
-                }
-                
-            ]
-        },
-        "strings": {
-            "patterns": [
-                {
-                    "include": "#f-strings"
                 },
                 {
-                    "comment": "double-quoted strings and byte strings",
-                    "name": "string.quoted.double.kairo",
-                    "begin": "(\")",
+                    "comment": "b byte string",
+                    "name": "string.regexp.kairo",
+                    "begin": "(?i)(b)(\")",
                     "beginCaptures": {
                         "1": {
-                            "name": "string.quoted.byte.raw.kairo"
+                            "name": "storage.type.string.kairo"
                         },
                         "2": {
-                            "name": "punctuation.definition.string.kairo"
+                            "name": "punctuation.definition.string.begin.kairo"
                         }
                     },
-                    "end": "\"",
+                    "end": "(\")",
                     "endCaptures": {
-                        "0": {
-                            "name": "punctuation.definition.string.kairo"
+                        "1": {
+                            "name": "punctuation.definition.string.end.kairo"
                         }
                     },
                     "patterns": [
@@ -659,26 +1577,84 @@
                             "include": "#escapes"
                         },
                         {
-                            "include": "#interpolations"
+                            "name": "invalid.illegal.non-ascii.kairo",
+                            "match": "[^\\x00-\\x7F]+"
                         }
                     ]
-                },
+                }
+            ]
+        },
+        "f-strings": {
+            "patterns": [
                 {
-                    "comment": "characters and bytes",
+                    "comment": "f f-string",
+                    "name": "string.quoted.double.f.kairo",
+                    "begin": "(?i)(f)(\")",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "keyword.other.string-prefix.kairo"
+                        },
+                        "2": {
+                            "name": "punctuation.definition.string.begin.kairo"
+                        }
+                    },
+                    "end": "(\")",
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.string.end.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#fstring-formatting-braces"
+                        },
+                        {
+                            "include": "#escapes"
+                        }
+                    ]
+                }
+            ]
+        },
+        "normal-strings": {
+            "patterns": [
+                {
+                    "comment": "plain double-quoted string",
+                    "name": "string.quoted.double.kairo",
+                    "begin": "(\")",
+                    "beginCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.string.begin.kairo"
+                        }
+                    },
+                    "end": "(\")",
+                    "endCaptures": {
+                        "1": {
+                            "name": "punctuation.definition.string.end.kairo"
+                        }
+                    },
+                    "patterns": [
+                        {
+                            "include": "#escapes"
+                        }
+                    ]
+                }
+            ]
+        },
+        "char-strings": {
+            "patterns": [
+                {
+                    "comment": "single-quoted char",
                     "name": "string.quoted.single.char.kairo",
                     "begin": "(')",
                     "beginCaptures": {
                         "1": {
-                            "name": "string.quoted.byte.raw.kairo"
-                        },
-                        "2": {
-                            "name": "punctuation.definition.char.kairo"
+                            "name": "punctuation.definition.string.begin.kairo"
                         }
                     },
-                    "end": "'",
+                    "end": "(')",
                     "endCaptures": {
-                        "0": {
-                            "name": "punctuation.definition.char.kairo"
+                        "1": {
+                            "name": "punctuation.definition.string.end.kairo"
                         }
                     },
                     "patterns": [
@@ -707,7 +1683,7 @@
             "patterns": [
                 {
                     "name": "variable.other.kairo",
-                    "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+                    "match": "(?<![A-Za-z0-9_])(?!fn\\b|if\\b|for\\b|match\\b|return\\b)[a-zA-Z_][a-zA-Z0-9_]*(?![A-Za-z0-9_])"
                 }
             ]
         }

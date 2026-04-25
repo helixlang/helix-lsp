@@ -1,8 +1,67 @@
 {
-  "comments": {
+   "comments": {
         "lineComment": "//",
         "blockComment": ["/*", "*/"]
     },
+    "onEnterRules": [
+        {
+            "beforeText": "^\\s*///",
+            "action": {
+                "indent": "none",
+                "appendText": "/// "
+            }
+        },
+        {
+            "beforeText": "^\\s*///<",
+            "action": {
+                "indent": "none",
+                "appendText": "///< "
+            }
+        },
+        {
+            "beforeText": "^\\s*//<",
+            "action": {
+                "indent": "none",
+                "appendText": "//< "
+            }
+        },
+        {
+            "beforeText": "^\\s*//(?!/)",
+            "action": {
+                "indent": "none",
+                "appendText": "// "
+            }
+        },
+        {
+            "beforeText": "^\\s*/\\*\\*(?!/)([^*]|\\*(?!/))*$",
+            "afterText": "^\\s*\\*/$",
+            "action": {
+                "indent": "indentOutdent",
+                "appendText": " * "
+            }
+        },
+        {
+            "beforeText": "^\\s*/\\*\\*(?!/)([^*]|\\*(?!/))*$",
+            "action": {
+                "indent": "none",
+                "appendText": " * "
+            }
+        },
+        {
+            "beforeText": "^(\\s+(\\*( |$)))",
+            "action": {
+                "indent": "none",
+                "appendText": "* "
+            }
+        },
+        {
+            "beforeText": "^\\s*\\*/\\s*$",
+            "action": {
+                "indent": "none",
+                "removeText": 1
+            }
+        }
+    ],
     
     "brackets": [
         ["{", "}"],
