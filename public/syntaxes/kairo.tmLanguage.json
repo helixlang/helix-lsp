@@ -938,6 +938,14 @@
                 {
                     "name": "constant.numeric.bin.kairo",
                     "match": "(?<![\\w])0b[01_]+(?![\\w])"
+                },
+                {
+                    "name": "constant.language.boolean.kairo",
+                    "match": "\\b(true|false)\\b"
+                },
+                {
+                    "name": "constant.language.null.kairo",
+                    "match": "\\bnull\\b"
                 }
             ]
         },
