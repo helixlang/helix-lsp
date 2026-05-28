@@ -25,7 +25,7 @@ def start_lsp_client():
             "method": "initialize",
             "params": {
                 "processId": None,
-                "rootUri": "file:///C:/Projects/my-shit/Kairo/Kairo-lang",
+                "rootUri": "file:///C:/Projects/my-shit/Kairo/kairolang",
                 "capabilities": {},
             }
         }
@@ -37,10 +37,10 @@ def start_lsp_client():
             "method": "textDocument/didOpen",
             "params": {
                 "textDocument": {
-                    "uri": "file:///C:/Projects/my-shit/Kairo/Kairo-lang/tests/main.kro",
-                    "languageId": "kro",
+                    "uri": "file:///C:/Projects/my-shit/Kairo/kairolang/tests/main.k",
+                    "languageId": "k",
                     "version": 1,
-                    "text": open("C:/Projects/my-shit/Kairo/Kairo-lang/tests/main.kro").read()
+                    "text": open("C:/Projects/my-shit/Kairo/kairolang/tests/main.k").read()
                 }
             }
         }

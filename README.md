@@ -5,7 +5,7 @@ providing real-time diagnostics, syntax highlighting, and editor integration.
 
 ## Features
 
-- Syntax highlighting for `.kro` and `.kairo` files
+- Syntax highlighting for `.k` and `.kairo` files
 - Real-time error and warning diagnostics from the Kairo compiler
 - Hover information and go-to-definition (via clangd proxy)
 - Automatic compiler discovery from PATH
@@ -17,7 +17,7 @@ providing real-time diagnostics, syntax highlighting, and editor integration.
    ensure `kairo` is available on your PATH.
 2. Install this extension from the
    [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=KSF.kairo).
-3. Open a `.kro` file the language server starts automatically.
+3. Open a `.k` file the language server starts automatically.
 
 Python 3.8+ must be available on your system. The extension will
 find it automatically; no manual configuration is needed.

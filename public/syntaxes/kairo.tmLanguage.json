@@ -46,6 +46,9 @@
             "include": "#constants"
         },
         {
+            "include": "#keywords"
+        },
+        {
             "include": "#functions"
         },
         {
@@ -62,9 +65,6 @@
         },
         {
             "include": "#strings"
-        },
-        {
-            "include": "#keywords"
         },
         {
             "include": "#variables"
@@ -538,7 +538,7 @@
                 {
                     "comment": "\\code or \\code{kairo} default to kairo",
                     "contentName": "meta.embedded.block.kairo",
-                    "begin": "\\\\code(\\{(?i)(kairo|kro)\\})?\\b",
+                    "begin": "\\\\code(\\{(?i)(kairo|k)\\})?\\b",
                     "end": "\\\\endcode\\b",
                     "beginCaptures": {
                         "0": {
@@ -693,9 +693,9 @@
                     ]
                 },
                 {
-                    "comment": "```kairo or ```kro fenced block",
+                    "comment": "```kairo or ```k fenced block",
                     "contentName": "meta.embedded.block.kairo",
-                    "begin": "(`{3,})(?i)(kairo|kro)\\s*$",
+                    "begin": "(`{3,})(?i)(kairo|k)\\s*$",
                     "end": "\\1",
                     "beginCaptures": {
                         "1": {
@@ -1103,7 +1103,7 @@
                 {
                     "comment": "Control flow keywords",
                     "name": "keyword.control.kairo",
-                    "match": "\\b(break|case|continue|default|else|for|if|match|switch|unless|in|while)\\b"
+                    "match": "\\b(break|case|continue|default|loop|else|for|if|match|switch|unless|in|while)\\b"
                 },
                 {
                     "comment": "Function and method keywords",
@@ -1118,7 +1118,7 @@
                 {
                     "comment": "Inheritance and polymorphism keywords",
                     "name": "keyword.inheritance.kairo",
-                    "match": "\\b(extend|derives|where|interface|requires|impl)\\b"
+                    "match": "\\b(extend|derives|final|where|interface|requires|impl)\\b"
                 },
                 {
                     "comment": "Error handling keywords",
@@ -1128,7 +1128,7 @@
                 {
                     "comment": "Variable declaration keywords",
                     "name": "keyword.declaration.kairo",
-                    "match": "\\b(eval|var|static|const|atomic)\\b"
+                    "match": "\\b(eval|var|static|const|atomic|volatile)\\b"
                 },
                 {
                     "comment": "Access specifiers",
@@ -1143,7 +1143,7 @@
                 {
                     "comment": "Concurrency keywords",
                     "name": "keyword.concurrency.kairo",
-                    "match": "\\b(await|async|thread)\\b"
+                    "match": "\\b(await|async|thread|spawn)\\b"
                 },
                 {
                     "comment": "Other keywords",
@@ -1153,12 +1153,31 @@
                 {
                     "comment": "Primitive Type keywords",
                     "name": "keyword.primitive.kairo",
-                    "match": "\\b(f32|f64|f80|f128|f256|i512|i256|i128|i16|i32|i64|i8|isize|u512|u256|u128|u16|u32|u64|u8|usize|char|bool|void)\\b"
+                    "match": "\\b(f16|f32|f64|f80|f128|f256|f512|i8|i16|i32|i64|i128|i256|i512|u8|u16|u32|u64|u128|u256|u512|isize|usize|char|bool|void|byte)\\b"
                 },
                 {
                     "comment": "Operators",
                     "name": "keyword.operator.kairo",
                     "match": "(\\?->\\*|\\?->|\\?\\.\\*|\\?\\.|<<=|>>=|\\.\\.\\.=|\\.\\.=|->\\*|===|<=>|&&=|\\|\\|=|\\^\\^=|~&=|~\\|=|!&=|!\\|=|\\|>|<\\||\\+\\+|--|\\*\\*=|\\*\\*|\\+=|-=|\\*=|\\/=|%=|&=|\\|=|\\^=|@=|!=|==|<=|>=|<<|>>|&&|\\|\\||\\^\\^|~&|~\\||!&|!\\||\\.\\.=|\\.\\.|->|=>|\\.\\*|\\.\\.\\.|\\+|-|\\*|\\/|%|&|\\||\\^|~|!|=|\\?|<|>|\\\\|\\.)"
+                },
+                {
+                    "comment": "Builtin identifiers",
+                    "name": "support.variable.builtin.kairo",
+                    "match": "\\b(__file__|__line__|__column__|__function__|__module__)\\b"
+                },
+                {
+                    "comment": "builtin attributes",
+                    "name": "meta.attribute.builtin.kairo",
+                    "match": "(@)(packed|unlikely|likely|internal|experimental|force_inline|no_inline|deprecated|must_use|alignas|unreachable|no_warn|fallthrough)\\b",
+                    "captures": {
+                        "1": { "name": "punctuation.definition.annotation.kairo" },
+                        "2": { "name": "support.function.attribute.kairo" }
+                    }
+                },
+                {
+                    "comment": "Alternative operators (C++ compatible)",
+                    "name": "keyword.operator.word.kairo",
+                    "match": "\\b(and|and_eq|bitand|bitor|compl|not|not_eq|or|or_eq|xor|xor_eq)\\b"
                 }
             ]
         },
@@ -1678,7 +1697,7 @@
                 {
                     "comment": "self",
                     "name": "variable.language.self.kairo",
-                    "match": "\\bself\\b"
+                    "match": "\\bself|Self\\b"
                 },
                 {
                     "comment": "super",

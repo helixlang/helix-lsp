@@ -8,7 +8,7 @@
         "type": "git",
         "url": "https://github.com/kairolang/kairo-lsp"
     },
-    "version": "0.5.4",
+    "version": "0.5.5",
     "publisher": "KSF",
     "engines": {
         "vscode": "^1.94.0"
@@ -25,19 +25,15 @@
         "languages": [
             {
                 "id": "kairo",
+                "firstLine": "^\\s*(?:fn\\s|ffi\\s|import\\s|eval\\s|struct\\s|class\\s|enum\\s|interface\\s|extend\\s|inline\\s\"(?:c\\+\\+|c|asm)\"|//|pub\\s|priv\\s|module\\s+[a-z])",
                 "configuration": "public/language-configuration.json",
                 "aliases": [
                     "kairo",
-                    "Kairo",
-                    "kro"
+                    "Kairo"
                 ],
                 "extensions": [
-                    ".hlx",
-                    ".helix",
-                    ".hdx",
-                    ".hdlx",
                     ".kairo",
-                    ".kro",
+                    ".k",
                     ".kh",
                     ".kairoh"
                 ],
